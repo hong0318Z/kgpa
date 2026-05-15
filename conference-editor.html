@@ -7,85 +7,100 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root {
+:root{
   --cp:#185FA5;--cp-bg:#E6F1FB;--cp-lt:#B5D4F4;
   --cs:#3B6D11;--cs-bg:#EAF3DE;
   --ct:#1a1a1a;--cts:#5f5e5a;--cth:#888780;
-  --cbg:#f5f5f3;--cw:#ffffff;--cbs:#f1efe8;
+  --cbg:#f5f5f3;--cw:#fff;--cbs:#f1efe8;
   --cb:#e0ded6;--cbs2:#c8c6be;
   --rsm:6px;--rmd:8px;--rlg:12px;
   --ed:#161622;--ep:#1e1e2e;--es:#252538;
   --eb:#32324a;--et:#ddddf0;--ets:#8888b0;
-  --ea:#7c6af7;--eah:#6a58e0;--eab:#2e2850;
-  --ei:#12121e;
+  --ea:#7c6af7;--eah:#6a58e0;--eab:#2e2850;--ei:#12121e;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);display:flex;flex-direction:column}
 
-/* TOOLBAR */
-.toolbar{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 1.2rem;background:var(--ep);border-bottom:1px solid var(--eb);flex-shrink:0}
-.tb-brand{display:flex;align-items:center;gap:8px;font-size:.88rem;font-weight:700;color:var(--ea)}
-.tb-brand i{font-size:1.1rem}
-.tb-actions{display:flex;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:6px;font-size:.8rem;font-family:inherit;cursor:pointer;border:none;transition:all .15s}
+/* ── TOOLBAR ── */
+.toolbar{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;background:var(--ep);border-bottom:1px solid var(--eb);flex-shrink:0;gap:8px}
+.tb-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.tb-brand{display:flex;align-items:center;gap:6px;font-size:.88rem;font-weight:700;color:var(--ea);white-space:nowrap;flex-shrink:0}
+.folder-chip{display:flex;align-items:center;gap:5px;background:var(--eab);border:1px solid var(--eb);border-radius:6px;padding:3px 9px;font-size:.72rem;color:var(--ets);cursor:pointer;transition:all .15s;min-width:0;overflow:hidden}
+.folder-chip:hover{border-color:var(--ea);color:var(--ea)}
+.folder-chip i{flex-shrink:0}
+.folder-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
+.folder-chip.ok{color:#5dbf78;border-color:#2e5040;background:#1a2e20}
+.tb-right{display:flex;gap:6px;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:6px;font-size:.78rem;font-family:inherit;cursor:pointer;border:none;transition:all .15s;white-space:nowrap}
 .btn-p{background:var(--ea);color:#fff}.btn-p:hover{background:var(--eah)}
 .btn-g{background:transparent;color:var(--ets);border:1px solid var(--eb)}.btn-g:hover{border-color:var(--ea);color:var(--ea)}
+.btn-view{display:none}
 
-/* WORKSPACE */
+/* ── WORKSPACE ── */
 .workspace{flex:1;display:flex;overflow:hidden}
 .preview-pane{flex:1;overflow-y:auto;background:var(--cbg);scrollbar-width:thin}
 .editor-pane{width:400px;flex-shrink:0;display:flex;flex-direction:column;background:var(--ep);border-left:1px solid var(--eb)}
 
-/* TABS */
+/* ── TABS ── */
 .tab-strip{display:flex;overflow-x:auto;border-bottom:1px solid var(--eb);flex-shrink:0}
 .tab-strip::-webkit-scrollbar{height:2px}.tab-strip::-webkit-scrollbar-thumb{background:var(--ea)}
-.stab{flex-shrink:0;padding:10px 12px;font-size:.76rem;font-family:inherit;color:var(--ets);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s}
+.stab{flex-shrink:0;padding:10px 11px;font-size:.75rem;font-family:inherit;color:var(--ets);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s}
 .stab:hover{color:var(--et)}.stab.active{color:var(--ea);border-bottom-color:var(--ea)}
 .form-scroll{flex:1;overflow-y:auto;padding:1rem;scrollbar-width:thin}
 
-/* FORM ELEMENTS */
-.fg{margin-bottom:.85rem}
-.fg label{display:block;font-size:.72rem;font-weight:600;color:var(--ets);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
-.fg input[type=text],.fg input[type=email],.fg input[type=url],.fg textarea,.fg select{width:100%;background:var(--ei);border:1px solid var(--eb);border-radius:6px;color:var(--et);font-family:inherit;font-size:.82rem;padding:7px 10px;outline:none;transition:border-color .15s}
-.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--ea)}
-.fg textarea{resize:vertical;min-height:75px;line-height:1.6}
+/* ── FORM ── */
+.fg{margin-bottom:.8rem}
+.fg label{display:block;font-size:.7rem;font-weight:700;color:var(--ets);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+.fg input[type=text],.fg input[type=email],.fg input[type=url],.fg textarea{width:100%;background:var(--ei);border:1px solid var(--eb);border-radius:6px;color:var(--et);font-family:inherit;font-size:.82rem;padding:7px 10px;outline:none;transition:border-color .15s}
+.fg input:focus,.fg textarea:focus{border-color:var(--ea)}
+.fg textarea{resize:vertical;min-height:70px;line-height:1.6}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
-/* ITEM CARDS */
-.icard{background:var(--es);border:1px solid var(--eb);border-radius:8px;padding:.75rem;margin-bottom:.6rem}
-.icard-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
-.icard-num{font-size:.72rem;font-weight:700;color:var(--ea);text-transform:uppercase}
-.icard-actions{display:flex;gap:3px}
-.ibtn{background:transparent;border:none;color:var(--ets);cursor:pointer;padding:3px 5px;border-radius:4px;font-size:.78rem;display:flex;align-items:center;transition:all .15s}
-.ibtn:hover{background:var(--eb);color:var(--et)}.ibtn.del:hover{background:#3d1515;color:#e05050}
-.add-btn{width:100%;padding:8px;background:transparent;border:1px dashed var(--eb);border-radius:6px;color:var(--ets);font-family:inherit;font-size:.78rem;cursor:pointer;transition:all .15s;margin-top:.4rem}
-.add-btn:hover{border-color:var(--ea);color:var(--ea)}
-
-/* FILE PICK */
-.file-pick{position:relative;border:1px dashed var(--eb);border-radius:6px;padding:8px 10px;text-align:center;cursor:pointer;transition:border-color .15s;overflow:hidden}
+/* ── IMAGE INPUT WIDGET ── */
+.img-widget{border:1px solid var(--eb);border-radius:8px;padding:.7rem;background:var(--ei)}
+.img-widget-row{display:flex;align-items:center;gap:6px;margin-bottom:.5rem}
+.img-widget-row input{flex:1;background:var(--ed);border:1px solid var(--eb);border-radius:5px;color:var(--et);font-family:inherit;font-size:.78rem;padding:5px 8px;outline:none}
+.img-widget-row input:focus{border-color:var(--ea)}
+.img-or{font-size:.68rem;color:var(--ets);flex-shrink:0}
+.file-pick{position:relative;border:1px dashed var(--eb);border-radius:5px;padding:6px 8px;text-align:center;cursor:pointer;transition:border-color .15s;overflow:hidden}
 .file-pick:hover{border-color:var(--ea)}
 .file-pick input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0;width:100%;height:100%}
-.file-pick-label{font-size:.75rem;color:var(--ets);pointer-events:none}
-.ftag{display:inline-flex;align-items:center;gap:4px;background:var(--eab);color:var(--ea);padding:2px 8px;border-radius:4px;font-size:.7rem;margin-top:3px}
-.sep{height:1px;background:var(--eb);margin:.8rem 0}
-.sub-hd{font-size:.7rem;font-weight:700;color:var(--ets);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem}
+.file-pick-lbl{font-size:.72rem;color:var(--ets);pointer-events:none;display:flex;align-items:center;justify-content:center;gap:4px}
+.img-preview{margin-top:.4rem;position:relative;display:inline-block}
+.img-preview img{max-height:72px;max-width:100%;border-radius:5px;border:1px solid var(--eb);object-fit:cover;display:block}
+.img-preview-del{position:absolute;top:-6px;right:-6px;background:#e05050;border:none;color:#fff;border-radius:50%;width:18px;height:18px;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ftag{display:inline-flex;align-items:center;gap:3px;background:var(--eab);color:var(--ea);padding:2px 7px;border-radius:4px;font-size:.7rem;margin-top:3px}
+.folder-hint{font-size:.68rem;color:var(--ets);margin-top:.3rem;opacity:.8}
 
-/* PHOTO GRID EDITOR */
+/* ── ITEM CARDS ── */
+.icard{background:var(--es);border:1px solid var(--eb);border-radius:8px;padding:.7rem;margin-bottom:.55rem}
+.icard-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.icard-num{font-size:.7rem;font-weight:700;color:var(--ea);text-transform:uppercase}
+.icard-actions{display:flex;gap:3px}
+.ibtn{background:transparent;border:none;color:var(--ets);cursor:pointer;padding:3px 5px;border-radius:4px;font-size:.75rem;display:flex;align-items:center;transition:all .15s}
+.ibtn:hover{background:var(--eb);color:var(--et)}.ibtn.del:hover{background:#3d1515;color:#e05050}
+.add-btn{width:100%;padding:7px;background:transparent;border:1px dashed var(--eb);border-radius:6px;color:var(--ets);font-family:inherit;font-size:.76rem;cursor:pointer;transition:all .15s;margin-top:.4rem}
+.add-btn:hover{border-color:var(--ea);color:var(--ea)}
+.sep{height:1px;background:var(--eb);margin:.75rem 0}
+.sub-hd{font-size:.68rem;font-weight:700;color:var(--ets);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.55rem}
+.help-txt{font-size:.72rem;color:var(--ets);margin-bottom:.7rem;line-height:1.6;opacity:.85}
+
+/* ── PHOTO GRID EDITOR ── */
 .pgrid-ed{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:6px}
 .pthumb{aspect-ratio:1;border-radius:4px;overflow:hidden;position:relative;background:var(--ei)}
 .pthumb img{width:100%;height:100%;object-fit:cover}
 .pthumb-del{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.65);border:none;border-radius:3px;color:#fff;font-size:9px;padding:1px 4px;cursor:pointer;opacity:0;transition:opacity .15s}
 .pthumb:hover .pthumb-del{opacity:1}
 
-/* ============ CONFERENCE PAGE STYLES (scoped to #preview) ============ */
+/* ══════════════════════════════════════════════
+   CONFERENCE PAGE (preview)
+══════════════════════════════════════════════ */
 #preview{font-family:'Noto Sans KR',sans-serif;font-size:16px;line-height:1.7;color:var(--ct);background:var(--cbg)}
-
 #preview .p-nav{background:var(--cw);border-bottom:1px solid var(--cb);position:sticky;top:0;z-index:50;padding:0 2rem}
 #preview .p-nav-inner{max-width:920px;margin:0 auto;display:flex;overflow-x:auto}
 #preview .p-nav-inner a{padding:.9rem 1.1rem;font-size:.86rem;color:var(--cts);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
 #preview .p-nav-inner a:hover,#preview .p-nav-inner a.active{color:var(--ct);border-bottom-color:var(--cp)}
-
 #preview .p-con{max-width:920px;margin:0 auto;padding:3rem 2rem}
 #preview .p-div{height:1px;background:var(--cb);margin:0 2rem}
 #preview .p-slabel{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--cp);text-transform:uppercase;margin-bottom:4px}
@@ -99,20 +114,21 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
 #preview .p-hero-meta{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:2rem}
 #preview .p-hero-meta span{font-size:.88rem;color:var(--cts);display:flex;align-items:center;gap:5px}
 #preview .p-hero-img{max-width:860px;margin:0 auto}
-#preview .p-hero-img img{width:100%;height:260px;object-fit:cover;border-radius:var(--rlg);border:1px solid var(--cb);display:block}
-#preview .p-hero-ph{width:100%;height:180px;background:linear-gradient(135deg,var(--cp-bg),var(--cp-lt));border-radius:var(--rlg);border:1px dashed var(--cp-lt);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--cp);gap:6px;font-size:.82rem;opacity:.7}
+/* 자연 높이 — width 100%, height auto */
+#preview .p-hero-img img{width:100%;height:auto;border-radius:var(--rlg);border:1px solid var(--cb);display:block}
+#preview .p-hero-ph{width:100%;height:160px;background:linear-gradient(135deg,var(--cp-bg),var(--cp-lt));border-radius:var(--rlg);border:1px dashed var(--cp-lt);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--cp);gap:6px;font-size:.82rem;opacity:.7}
 
 /* Greeting */
 #preview .p-greeting{background:var(--cw);border:1px solid var(--cb);border-radius:var(--rlg);padding:2rem;display:grid;grid-template-columns:1fr 160px;gap:2rem;margin-bottom:1.2rem}
 #preview .p-greeting:last-child{margin-bottom:0}
 #preview .p-gbody{font-family:'Noto Serif KR',serif;font-size:.92rem;color:var(--cts);line-height:2}
 #preview .p-ginfo{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:.5rem}
-#preview .p-avatar{width:88px;height:88px;border-radius:50%;background:var(--cp-bg);border:1px solid var(--cp-lt);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:var(--cp);margin-bottom:.8rem;overflow:hidden}
+#preview .p-avatar{width:88px;height:88px;border-radius:50%;background:var(--cp-bg);border:1px solid var(--cp-lt);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:var(--cp);margin-bottom:.8rem;overflow:hidden;flex-shrink:0}
 #preview .p-avatar img{width:100%;height:100%;object-fit:cover}
 #preview .p-gname{font-size:.92rem;font-weight:700;margin-bottom:4px}
 #preview .p-gorg{font-size:.78rem;color:var(--cts);line-height:1.5}
 
-/* Paper/Keynote item */
+/* Keynote item */
 #preview .p-item{background:var(--cw);border:1px solid var(--cb);border-radius:var(--rmd);padding:1rem 1.25rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;transition:border-color .2s}
 #preview .p-item:last-child{margin-bottom:0}
 #preview .p-item:hover{border-color:var(--cbs2)}
@@ -133,11 +149,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
 #preview .p-ptitle{font-size:.86rem;font-weight:500;line-height:1.5;margin-bottom:8px}
 #preview .p-pauthor{font-size:.78rem;color:var(--cts)}
 
-/* Field Sketch */
+/* Sketch */
 #preview .p-sk-ph{text-align:center;padding:3.5rem 2rem;background:var(--cw);border:1px dashed var(--cb);border-radius:var(--rlg);color:var(--cts)}
 #preview .p-sk-ph i{font-size:2.5rem;opacity:.25;display:block;margin-bottom:.8rem}
-#preview .p-sk-ph p{font-size:.9rem}
-#preview .p-sk-ph small{font-size:.78rem;opacity:.6}
 #preview .p-photogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem}
 #preview .p-photo-item{border-radius:var(--rmd);overflow:hidden;aspect-ratio:4/3;cursor:pointer;background:var(--cbs);position:relative}
 #preview .p-photo-item img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
@@ -149,7 +163,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
 #preview .p-footer{background:var(--cw);border-top:1px solid var(--cb);padding:2rem;text-align:center;font-size:.83rem;color:var(--cts)}
 #preview .p-footer a{color:var(--cp);text-decoration:none}
 
-/* ============ MODALS ============ */
+/* ── MODALS ── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9000;align-items:center;justify-content:center}
 .overlay.open{display:flex}
 .fmodal{background:#fff;border-radius:12px;overflow:hidden;width:min(900px,92vw);max-height:90vh;display:flex;flex-direction:column}
@@ -164,7 +178,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
 .fmodal-dl p{font-size:.88rem;text-align:center;line-height:1.7}
 .fmodal-dl a{display:inline-flex;align-items:center;gap:6px;background:var(--cp);color:#fff;padding:8px 20px;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:600}
 
-/* Lightbox */
+/* ── LIGHTBOX ── */
 .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
 .lightbox.open{display:flex}
 .lb-wrap{position:relative;display:flex;align-items:center;justify-content:center;max-width:90vw;max-height:82vh}
@@ -173,30 +187,57 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
 .lb-close:hover{background:rgba(255,255,255,.22)}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:background .15s}
 .lb-nav:hover{background:rgba(255,255,255,.22)}
-.lb-prev{left:-60px}.lb-next{right:-60px}
+.lb-prev{left:-58px}.lb-next{right:-58px}
 .lb-cap{color:rgba(255,255,255,.75);font-size:.82rem;text-align:center}
 .lb-cnt{color:rgba(255,255,255,.45);font-size:.74rem}
+
+/* ══════════════════════════════════════════════
+   MOBILE RESPONSIVE
+══════════════════════════════════════════════ */
+@media(max-width:768px){
+  .toolbar{height:auto;padding:.5rem .8rem;flex-wrap:wrap;gap:6px}
+  .tb-left{flex:1 1 100%;order:1}
+  .tb-right{order:2;flex:1 1 100%;justify-content:flex-end}
+  .tb-brand span{display:none} /* hide text, keep icon */
+  .folder-chip span{max-width:80px}
+  .btn-view{display:inline-flex!important}
+  .workspace{flex-direction:column}
+  .preview-pane{flex:none;height:0;overflow:hidden;transition:height .3s}
+  .preview-pane.mobile-show{height:50vh;overflow-y:auto}
+  .editor-pane{width:100%;flex:1}
+  .lb-prev{left:-48px}.lb-next{right:-48px}
+}
+@media(max-width:480px){
+  .lb-prev,.lb-next{display:none}
+}
 </style>
 </head>
 <body>
 
 <header class="toolbar">
-  <div class="tb-brand"><i class="ti ti-browser"></i>학술대회 페이지 에디터</div>
-  <div class="tb-actions">
+  <div class="tb-left">
+    <div class="tb-brand"><i class="ti ti-browser"></i><span>학술대회 에디터</span></div>
+    <div class="folder-chip" id="folder-chip" onclick="pickFolder()" title="이미지 저장 폴더 선택 (source/ 하위 폴더)">
+      <i class="ti ti-folder"></i>
+      <span id="folder-name">저장 폴더 선택</span>
+    </div>
+  </div>
+  <div class="tb-right">
+    <button class="btn btn-g btn-view" id="btn-view" onclick="toggleMobileView()"><i class="ti ti-eye"></i>미리보기</button>
     <button class="btn btn-g" onclick="resetData()"><i class="ti ti-refresh"></i>초기화</button>
     <button class="btn btn-p" onclick="exportHTML()"><i class="ti ti-download"></i>HTML 내보내기</button>
   </div>
 </header>
 
 <div class="workspace">
-  <div class="preview-pane"><div id="preview"></div></div>
+  <div class="preview-pane" id="preview-pane"><div id="preview"></div></div>
   <aside class="editor-pane">
     <div class="tab-strip">
-      <button class="stab active" data-tab="basic" onclick="switchTab('basic')">기본 정보</button>
-      <button class="stab" data-tab="greeting" onclick="switchTab('greeting')">축사</button>
-      <button class="stab" data-tab="keynote" onclick="switchTab('keynote')">특강</button>
-      <button class="stab" data-tab="poster" onclick="switchTab('poster')">포스터</button>
-      <button class="stab" data-tab="sketch" onclick="switchTab('sketch')">현장 스케치</button>
+      <button class="stab active" data-tab="basic"    onclick="switchTab('basic')">기본 정보</button>
+      <button class="stab"        data-tab="greeting" onclick="switchTab('greeting')">축사</button>
+      <button class="stab"        data-tab="keynote"  onclick="switchTab('keynote')">특강</button>
+      <button class="stab"        data-tab="poster"   onclick="switchTab('poster')">포스터</button>
+      <button class="stab"        data-tab="sketch"   onclick="switchTab('sketch')">현장 스케치</button>
     </div>
     <div class="form-scroll" id="form-area"></div>
   </aside>
@@ -227,7 +268,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
 
 <script>
 /* ================================================================
-   DATA
+   DATA MODEL
+   이미지 객체: { src: string, exportRef: string }
+   - src: 미리보기용 (base64 또는 URL)
+   - exportRef: 내보내기용 (source/파일명, URL, 또는 base64)
 ================================================================ */
 const DEFAULT = {
   basic:{
@@ -263,53 +307,135 @@ let D = JSON.parse(JSON.stringify(DEFAULT));
 let currentTab = 'basic';
 let uid = 200;
 let lbIdx = 0;
+let dirHandle = null; // File System Access API directory handle
+
+/* ── image helpers ── */
+function imgSrc(img){
+  if(!img) return null;
+  return typeof img === 'string' ? img : img.src;
+}
+function imgExportRef(img){
+  if(!img) return null;
+  return typeof img === 'string' ? img : (img.exportRef || img.src);
+}
+function makeImg(src, exportRef){
+  return { src, exportRef: exportRef || src };
+}
+
+/* ================================================================
+   FOLDER MANAGEMENT (File System Access API)
+================================================================ */
+async function pickFolder(){
+  if(!window.showDirectoryPicker){
+    alert('이 기능은 Chrome / Edge 브라우저에서 지원됩니다.\n현재 브라우저에서는 이미지가 base64로 저장됩니다.');
+    return;
+  }
+  try{
+    dirHandle = await window.showDirectoryPicker({mode:'readwrite'});
+    await dirHandle.getDirectoryHandle('source',{create:true});
+    updateFolderUI();
+  }catch(e){
+    if(e.name !== 'AbortError') alert('폴더 선택 오류: ' + e.message);
+  }
+}
+
+function updateFolderUI(){
+  const chip = document.getElementById('folder-chip');
+  const name = document.getElementById('folder-name');
+  if(dirHandle){
+    name.textContent = dirHandle.name + '/source';
+    chip.classList.add('ok');
+    chip.title = '선택된 폴더: ' + dirHandle.name + '/source\n(클릭하여 변경)';
+  }else{
+    name.textContent = '저장 폴더 선택';
+    chip.classList.remove('ok');
+    chip.title = '이미지 저장 폴더 선택 (source/ 하위 폴더)';
+  }
+}
+
+async function saveToSource(file){
+  if(!dirHandle) return null;
+  try{
+    const src = await dirHandle.getDirectoryHandle('source',{create:true});
+    const h = await src.getFileHandle(file.name,{create:true});
+    const w = await h.createWritable();
+    await w.write(file);
+    await w.close();
+    return 'source/' + file.name;
+  }catch(e){
+    console.warn('source/ 저장 실패:', e);
+    return null;
+  }
+}
 
 /* ================================================================
    PERSISTENCE
 ================================================================ */
 function save(){
-  try{ localStorage.setItem('conf-ed',JSON.stringify(D)); }catch(e){}
+  try{ localStorage.setItem('conf-ed-v2', JSON.stringify(D)); }catch(e){}
 }
 function loadSaved(){
   try{
-    const s=localStorage.getItem('conf-ed');
-    if(s) D=JSON.parse(s);
+    const s = localStorage.getItem('conf-ed-v2') || localStorage.getItem('conf-ed');
+    if(s) D = JSON.parse(s);
   }catch(e){}
+}
+
+/* ================================================================
+   UTILS
+================================================================ */
+function esc(s){
+  if(!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function readFile(file){
+  return new Promise((res,rej)=>{
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+async function handleImgUpload(file){
+  const base64 = await readFile(file);
+  const pathRef = await saveToSource(file);
+  return makeImg(base64, pathRef || base64);
+}
+function isPDF(name,data){
+  return (data && data.startsWith('data:application/pdf')) || (name && /\.pdf$/i.test(name));
+}
+function getFileObj(item){
+  if(item.fileData) return{type:'b64',data:item.fileData,name:item.fileName};
+  if(item.fileUrl)  return{type:'url',url:item.fileUrl,name:item.fileUrl.split('/').pop()||'파일'};
+  return null;
+}
+function folderHint(){
+  return dirHandle
+    ? `<div class="folder-hint"><i class="ti ti-check" style="color:#5dbf78"></i> source/ 폴더에 저장됩니다</div>`
+    : `<div class="folder-hint">※ 저장 폴더를 선택하면 source/ 폴더에 파일이 저장됩니다</div>`;
+}
+
+/* ================================================================
+   MOBILE TOGGLE
+================================================================ */
+let mobileShowPreview = false;
+function toggleMobileView(){
+  mobileShowPreview = !mobileShowPreview;
+  const pp = document.getElementById('preview-pane');
+  const btn = document.getElementById('btn-view');
+  pp.classList.toggle('mobile-show', mobileShowPreview);
+  btn.innerHTML = mobileShowPreview
+    ? '<i class="ti ti-pencil"></i>편집'
+    : '<i class="ti ti-eye"></i>미리보기';
 }
 
 /* ================================================================
    TABS
 ================================================================ */
 function switchTab(tab){
-  currentTab=tab;
-  document.querySelectorAll('.stab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  currentTab = tab;
+  document.querySelectorAll('.stab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   renderPanel();
-}
-
-/* ================================================================
-   UTILITY
-================================================================ */
-function esc(s){
-  if(!s)return'';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-function readFile(file){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=e=>res(e.target.result);
-    r.onerror=rej;
-    r.readAsDataURL(file);
-  });
-}
-function isPDF(name,data){
-  if(data && data.startsWith('data:application/pdf')) return true;
-  if(name && /\.pdf$/i.test(name)) return true;
-  return false;
-}
-function getFileObj(item){
-  if(item.fileData) return{type:'b64',data:item.fileData,name:item.fileName};
-  if(item.fileUrl)  return{type:'url',url:item.fileUrl,name:item.fileUrl.split('/').pop()};
-  return null;
 }
 
 /* ================================================================
@@ -317,7 +443,6 @@ function getFileObj(item){
 ================================================================ */
 function renderPreview(){
   document.getElementById('preview').innerHTML = buildPage();
-  // attach click handlers
   document.querySelectorAll('#preview .p-item.clickable').forEach(el=>{
     el.addEventListener('click',()=>openFile(JSON.parse(el.dataset.file||'null'),el.dataset.title));
   });
@@ -330,17 +455,16 @@ function renderPreview(){
 }
 
 function buildPage(){
-  const b=D.basic;
-
-  // hero image
-  const heroImg = b.heroImage
-    ? `<img src="${b.heroImage}" alt="대표 이미지">`
+  const b = D.basic;
+  const heroSrc = imgSrc(b.heroImage);
+  const heroImg = heroSrc
+    ? `<img src="${heroSrc}" alt="대표 이미지">`
     : `<div class="p-hero-ph"><i class="ti ti-photo" style="font-size:2rem"></i><span>대표 이미지 삽입 영역</span></div>`;
 
-  // greetings
   const greetingsHtml = D.greetings.map(g=>{
-    const av = g.photo
-      ? `<div class="p-avatar"><img src="${g.photo}" alt="${esc(g.name)}"></div>`
+    const photoSrc = imgSrc(g.photo);
+    const av = photoSrc
+      ? `<div class="p-avatar"><img src="${photoSrc}" alt="${esc(g.name)}"></div>`
       : `<div class="p-avatar">${esc(g.initial)}</div>`;
     return`<div class="p-greeting">
       <div class="p-gbody">${esc(g.body)}</div>
@@ -350,55 +474,48 @@ function buildPage(){
       </div></div>`;
   }).join('') || '<p style="color:#aaa;font-size:.88rem">축사를 추가하세요.</p>';
 
-  // keynotes
   const keynotesHtml = D.keynotes.map(k=>{
-    const fo=getFileObj(k);
-    const fattr=fo?`class="p-item clickable" data-file='${JSON.stringify(fo)}' data-title="${esc(k.title)}"`:`class="p-item"`;
-    const badge=fo?`<span class="p-fbadge"><i class="ti ti-file-text"></i>자료 보기</span>`:'';
-    return`<div ${fattr}>
+    const fo = getFileObj(k);
+    const cls = fo ? 'p-item clickable' : 'p-item';
+    const fattr = fo ? `data-file='${JSON.stringify(fo)}' data-title="${esc(k.title)}"` : '';
+    const badge = fo ? `<span class="p-fbadge"><i class="ti ti-file-text"></i>자료 보기</span>` : '';
+    return`<div class="${cls}" ${fattr}>
       <div><div class="p-ititle">${esc(k.title)}</div><div class="p-iauthors">${esc(k.presenter)}</div></div>
       <div class="p-iright"><div class="p-itime">${esc(k.time)}</div>${badge}</div>
     </div>`;
   }).join('') || '<p style="color:#aaa;font-size:.88rem">특강 항목을 추가하세요.</p>';
 
-  // posters
   const postersHtml = D.posters.map(p=>{
-    const fo=getFileObj(p);
-    const cls=fo?'p-pcard clickable':'p-pcard';
-    const fattr=fo?`data-file='${JSON.stringify(fo)}' data-title="${esc(p.title)}"`:'';
-    const badge=fo?`<div style="margin-top:6px"><span class="p-fbadge"><i class="ti ti-external-link"></i>보기</span></div>`:'';
+    const fo = getFileObj(p);
+    const cls = fo ? 'p-pcard clickable' : 'p-pcard';
+    const fattr = fo ? `data-file='${JSON.stringify(fo)}' data-title="${esc(p.title)}"` : '';
+    const badge = fo ? `<div style="margin-top:6px"><span class="p-fbadge"><i class="ti ti-external-link"></i>보기</span></div>` : '';
     return`<div class="${cls}" ${fattr}>
       <div class="p-pnum">${esc(p.num)}</div>
       <div class="p-ptitle">${esc(p.title)}</div>
-      <div class="p-pauthor">${esc(p.author)}</div>
-      ${badge}
+      <div class="p-pauthor">${esc(p.author)}</div>${badge}
     </div>`;
   }).join('') || '<p style="color:#aaa;font-size:.88rem">포스터 항목을 추가하세요.</p>';
 
-  // field sketch
   let sketchHtml;
-  if(D.sketch.photos.length===0){
-    sketchHtml=`<div class="p-sk-ph"><i class="ti ti-camera"></i>
+  if(D.sketch.photos.length === 0){
+    sketchHtml = `<div class="p-sk-ph"><i class="ti ti-camera"></i>
       <p>현장 스케치 사진을 준비 중입니다.</p>
-      <small>추후 공개됩니다</small></div>`;
+      <p style="font-size:.78rem;margin-top:.3rem;opacity:.6">추후 공개됩니다</p></div>`;
   }else{
-    const imgs=D.sketch.photos.map((ph,i)=>
+    const imgs = D.sketch.photos.map((ph,i)=>
       `<div class="p-photo-item">
-        <img src="${ph.src}" alt="${esc(ph.caption)||'현장 스케치 '+(i+1)}">
+        <img src="${imgSrc(ph)}" alt="${esc(ph.caption)||'현장 스케치 '+(i+1)}">
         ${ph.caption?`<div class="p-photo-cap">${esc(ph.caption)}</div>`:''}
-      </div>`
-    ).join('');
-    sketchHtml=`<div class="p-photogrid">${imgs}</div>`;
+      </div>`).join('');
+    sketchHtml = `<div class="p-photogrid">${imgs}</div>`;
   }
 
   return`
     <nav class="p-nav"><div class="p-nav-inner">
-      <a href="#p-greeting">축사</a>
-      <a href="#p-keynote">특강</a>
-      <a href="#p-poster">포스터 발표</a>
-      <a href="#p-sketch">현장 스케치</a>
+      <a href="#p-greeting">축사</a><a href="#p-keynote">특강</a>
+      <a href="#p-poster">포스터 발표</a><a href="#p-sketch">현장 스케치</a>
     </div></nav>
-
     <div class="p-hero">
       <div class="p-badge">${esc(b.badge)}</div>
       <h1>${esc(b.title)}<br>${esc(b.year)}</h1>
@@ -410,34 +527,22 @@ function buildPage(){
       </div>
       <div class="p-hero-img">${heroImg}</div>
     </div>
-
     <section id="p-greeting"><div class="p-con">
-      <div class="p-slabel">Greetings</div>
-      <div class="p-stitle">축사</div>
-      ${greetingsHtml}
+      <div class="p-slabel">Greetings</div><div class="p-stitle">축사</div>${greetingsHtml}
     </div></section>
     <div class="p-div"></div>
-
     <section id="p-keynote"><div class="p-con">
-      <div class="p-slabel">Keynote</div>
-      <div class="p-stitle">특강</div>
-      ${keynotesHtml}
+      <div class="p-slabel">Keynote</div><div class="p-stitle">특강</div>${keynotesHtml}
     </div></section>
     <div class="p-div"></div>
-
     <section id="p-poster"><div class="p-con">
-      <div class="p-slabel">Poster Session</div>
-      <div class="p-stitle">포스터 발표</div>
+      <div class="p-slabel">Poster Session</div><div class="p-stitle">포스터 발표</div>
       <div class="p-pgrid">${postersHtml}</div>
     </div></section>
     <div class="p-div"></div>
-
     <section id="p-sketch"><div class="p-con">
-      <div class="p-slabel">Field Sketch</div>
-      <div class="p-stitle">현장 스케치</div>
-      ${sketchHtml}
+      <div class="p-slabel">Field Sketch</div><div class="p-stitle">현장 스케치</div>${sketchHtml}
     </div></section>
-
     <footer class="p-footer">
       <p>© ${new Date().getFullYear()} ${esc(b.organizer)}</p>
       ${b.email?`<p style="margin-top:4px">문의: <a href="mailto:${esc(b.email)}">${esc(b.email)}</a></p>`:''}
@@ -447,86 +552,106 @@ function buildPage(){
 /* ================================================================
    FILE MODAL
 ================================================================ */
-function openFile(fo,title){
-  if(!fo)return;
-  document.getElementById('fmodal-title').textContent=title||'자료 보기';
-  const body=document.getElementById('fmodal-body');
-  body.innerHTML='';
-  let src='',pdf=false,fname='';
-  if(fo.type==='url'){
-    src=fo.url; pdf=isPDF(fo.url); fname=fo.name||'파일';
-  }else if(fo.type==='b64'){
-    const mime=fo.data.split(';')[0].split(':')[1];
-    pdf=mime==='application/pdf';
-    const b=atob(fo.data.split(',')[1]),ab=new ArrayBuffer(b.length),ia=new Uint8Array(ab);
-    for(let i=0;i<b.length;i++)ia[i]=b.charCodeAt(i);
-    src=URL.createObjectURL(new Blob([ab],{type:mime}));
-    fname=fo.name||'파일';
+function openFile(fo, title){
+  if(!fo) return;
+  document.getElementById('fmodal-title').textContent = title || '자료 보기';
+  const body = document.getElementById('fmodal-body');
+  body.innerHTML = '';
+  let src = '', pdf = false, fname = '';
+  if(fo.type === 'url'){
+    src = fo.url; pdf = isPDF(fo.url); fname = fo.name || '파일';
+  }else if(fo.type === 'b64'){
+    const mime = fo.data.split(';')[0].split(':')[1];
+    pdf = mime === 'application/pdf';
+    const b = atob(fo.data.split(',')[1]), ab = new ArrayBuffer(b.length), ia = new Uint8Array(ab);
+    for(let i=0;i<b.length;i++) ia[i] = b.charCodeAt(i);
+    src = URL.createObjectURL(new Blob([ab],{type:mime}));
+    fname = fo.name || '파일';
   }
   if(pdf){
-    body.innerHTML=`<iframe src="${src}#toolbar=1"></iframe>`;
+    body.innerHTML = `<iframe src="${src}#toolbar=1" title="${esc(title)}"></iframe>`;
   }else{
-    body.innerHTML=`<div class="fmodal-dl">
+    body.innerHTML = `<div class="fmodal-dl">
       <i class="ti ti-file-presentation"></i>
-      <p>이 파일 형식은 브라우저에서 바로 볼 수 없습니다.<br>아래 버튼을 클릭하여 다운로드하세요.</p>
+      <p>이 파일은 브라우저에서 직접 볼 수 없습니다.<br>아래 버튼으로 다운로드하세요.</p>
       <a href="${src}" download="${esc(fname)}" target="_blank"><i class="ti ti-download"></i>다운로드</a>
     </div>`;
   }
   document.getElementById('file-overlay').classList.add('open');
 }
 function closeFileModal(e){
-  if(e&&e.target!==document.getElementById('file-overlay'))return;
+  if(e && e.target !== document.getElementById('file-overlay')) return;
   document.getElementById('file-overlay').classList.remove('open');
-  document.getElementById('fmodal-body').innerHTML='';
+  document.getElementById('fmodal-body').innerHTML = '';
 }
 
 /* ================================================================
    LIGHTBOX
 ================================================================ */
-function openLightbox(i){
-  lbIdx=i; showLb();
-  document.getElementById('lightbox').classList.add('open');
-}
+function openLightbox(i){ lbIdx=i; showLb(); document.getElementById('lightbox').classList.add('open'); }
 function showLb(){
-  const ph=D.sketch.photos[lbIdx];
-  if(!ph)return;
-  document.getElementById('lb-img').src=ph.src;
-  document.getElementById('lb-cap').textContent=ph.caption||'';
-  document.getElementById('lb-cnt').textContent=`${lbIdx+1} / ${D.sketch.photos.length}`;
+  const ph = D.sketch.photos[lbIdx]; if(!ph) return;
+  document.getElementById('lb-img').src = imgSrc(ph);
+  document.getElementById('lb-cap').textContent = ph.caption || '';
+  document.getElementById('lb-cnt').textContent = `${lbIdx+1} / ${D.sketch.photos.length}`;
 }
-function lbNav(d){
-  lbIdx=(lbIdx+d+D.sketch.photos.length)%D.sketch.photos.length;
-  showLb();
-}
+function lbNav(d){ lbIdx = (lbIdx+d+D.sketch.photos.length)%D.sketch.photos.length; showLb(); }
 function closeLightbox(e){
-  if(e&&e.target!==document.getElementById('lightbox'))return;
+  if(e && e.target !== document.getElementById('lightbox')) return;
   document.getElementById('lightbox').classList.remove('open');
 }
 document.addEventListener('keydown',e=>{
   if(document.getElementById('lightbox').classList.contains('open')){
-    if(e.key==='ArrowLeft')lbNav(-1);
-    else if(e.key==='ArrowRight')lbNav(1);
-    else if(e.key==='Escape')closeLightbox();
+    if(e.key==='ArrowLeft') lbNav(-1);
+    else if(e.key==='ArrowRight') lbNav(1);
+    else if(e.key==='Escape') closeLightbox();
   }
-  if(document.getElementById('file-overlay').classList.contains('open')&&e.key==='Escape')closeFileModal();
+  if(document.getElementById('file-overlay').classList.contains('open') && e.key==='Escape') closeFileModal();
 });
+
+/* ================================================================
+   IMAGE WIDGET HTML BUILDER
+================================================================ */
+function imgWidget(opts){
+  /* opts: { urlVal, urlAttr, fileAttr, imgObj, clearFn, hint } */
+  const src = imgSrc(opts.imgObj);
+  const ref = opts.imgObj ? (opts.imgObj.exportRef||opts.imgObj.src||'') : '';
+  const isUrl = src && (src.startsWith('http') || src.startsWith('//'));
+  const showPath = ref && ref.startsWith('source/');
+  return`<div class="img-widget">
+    <div class="img-widget-row">
+      <input type="url" placeholder="이미지 URL (CDN 링크)" value="${isUrl?esc(src):''}" ${opts.urlAttr}>
+      <span class="img-or">또는</span>
+      <div class="file-pick" style="flex-shrink:0;min-width:90px">
+        <input type="file" accept="image/*" ${opts.fileAttr}>
+        <div class="file-pick-lbl"><i class="ti ti-upload"></i>파일</div>
+      </div>
+    </div>
+    ${src?`<div class="img-preview">
+      <img src="${src}" alt="">
+      ${showPath?`<div style="font-size:.68rem;color:#5dbf78;margin-top:2px"><i class="ti ti-folder"></i> ${esc(ref)}</div>`:''}
+      <button class="img-preview-del" onclick="${opts.clearFn}" title="이미지 제거">✕</button>
+    </div>`:''}
+    ${folderHint()}
+  </div>`;
+}
 
 /* ================================================================
    PANEL RENDERING
 ================================================================ */
 function renderPanel(){
-  const a=document.getElementById('form-area');
-  if(currentTab==='basic')    a.innerHTML=panelBasic();
-  else if(currentTab==='greeting') a.innerHTML=panelGreeting();
-  else if(currentTab==='keynote')  a.innerHTML=panelKeynote();
-  else if(currentTab==='poster')   a.innerHTML=panelPoster();
-  else if(currentTab==='sketch')   a.innerHTML=panelSketch();
+  const a = document.getElementById('form-area');
+  if(currentTab==='basic')    a.innerHTML = panelBasic();
+  else if(currentTab==='greeting') a.innerHTML = panelGreeting();
+  else if(currentTab==='keynote')  a.innerHTML = panelKeynote();
+  else if(currentTab==='poster')   a.innerHTML = panelPoster();
+  else if(currentTab==='sketch')   a.innerHTML = panelSketch();
   bindListeners();
 }
 
-/* --- Basic --- */
+/* ── Basic ── */
 function panelBasic(){
-  const b=D.basic;
+  const b = D.basic;
   return`
   <div class="sub-hd">페이지 기본 정보</div>
   <div class="fg"><label>배지 텍스트</label><input type="text" data-f="badge" value="${esc(b.badge)}"></div>
@@ -540,24 +665,23 @@ function panelBasic(){
   <div class="fg"><label>주최</label><input type="text" data-f="organizer" value="${esc(b.organizer)}"></div>
   <div class="sep"></div>
   <div class="sub-hd">대표 이미지</div>
+  <p class="help-txt">이미지 원본 비율 그대로 표시됩니다 (폭 100%, 높이 자동).</p>
   <div class="fg">
-    <div class="file-pick" id="hero-pick">
-      <input type="file" accept="image/*" id="hero-file">
-      <div class="file-pick-label">
-        ${b.heroImage?`<img src="${b.heroImage}" style="max-height:80px;max-width:100%;border-radius:4px;object-fit:cover">`:
-        '<i class="ti ti-photo" style="font-size:1.5rem;opacity:.4;display:block;margin-bottom:4px"></i>이미지 업로드 (클릭)'}
-      </div>
-    </div>
-    ${b.heroImage?`<button onclick="D.basic.heroImage=null;save();renderPreview();renderPanel()" style="margin-top:4px;font-size:.72rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 이미지 제거</button>`:''}
+    ${imgWidget({
+      imgObj: b.heroImage,
+      urlAttr: 'id="hero-url"',
+      fileAttr: 'id="hero-file"',
+      clearFn: 'D.basic.heroImage=null;save();renderPreview();renderPanel()'
+    })}
   </div>
   <div class="sep"></div>
   <div class="sub-hd">푸터</div>
   <div class="fg"><label>이메일</label><input type="email" data-f="email" value="${esc(b.email)}"></div>`;
 }
 
-/* --- Greeting --- */
+/* ── Greeting ── */
 function panelGreeting(){
-  const items=D.greetings.map((g,i)=>`
+  const items = D.greetings.map((g,i)=>`
   <div class="icard">
     <div class="icard-hd"><span class="icard-num">축사 ${i+1}</span>
       <div class="icard-actions"><button class="ibtn del" onclick="removeItem('greetings',${g.id})"><i class="ti ti-trash"></i></button></div>
@@ -572,19 +696,21 @@ function panelGreeting(){
       <div class="fg"><label>직함</label><input type="text" data-gid="${g.id}" data-gf="role" value="${esc(g.role)}"></div>
     </div>
     <div class="fg"><label>프로필 사진</label>
-      <div class="file-pick"><input type="file" accept="image/*" class="gphoto" data-gid="${g.id}">
-        <div class="file-pick-label">${g.photo?`<img src="${g.photo}" style="width:50px;height:50px;border-radius:50%;object-fit:cover">`:
-        '사진 업로드 (선택)'}</div></div>
-      ${g.photo?`<button onclick="clearGPhoto(${g.id})" style="margin-top:3px;font-size:.7rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 사진 제거</button>`:''}
+      ${imgWidget({
+        imgObj: g.photo,
+        urlAttr: `data-gid="${g.id}" class="gphoto-url"`,
+        fileAttr: `data-gid="${g.id}" class="gphoto-file"`,
+        clearFn: `clearGPhoto(${g.id})`
+      })}
     </div>
   </div>`).join('');
   return`<div class="sub-hd">축사 목록</div>${items}
   <button class="add-btn" onclick="addGreeting()">+ 축사 추가</button>`;
 }
 
-/* --- Keynote --- */
+/* ── Keynote ── */
 function panelKeynote(){
-  const items=D.keynotes.map((k,i)=>`
+  const items = D.keynotes.map((k,i)=>`
   <div class="icard">
     <div class="icard-hd"><span class="icard-num">특강 ${i+1}</span>
       <div class="icard-actions"><button class="ibtn del" onclick="removeItem('keynotes',${k.id})"><i class="ti ti-trash"></i></button></div>
@@ -592,24 +718,24 @@ function panelKeynote(){
     <div class="fg"><label>특강 제목</label><input type="text" data-kid="${k.id}" data-kf="title" value="${esc(k.title)}"></div>
     <div class="fg"><label>발표자 · 소속</label><input type="text" data-kid="${k.id}" data-kf="presenter" value="${esc(k.presenter)}"></div>
     <div class="fg"><label>시간</label><input type="text" data-kid="${k.id}" data-kf="time" value="${esc(k.time)}" placeholder="09:30–10:30"></div>
-    <div class="fg"><label>자료 URL (PDF/PPT 링크)</label>
+    <div class="fg"><label>자료 URL (CDN 링크)</label>
       <input type="url" data-kid="${k.id}" data-kf="fileUrl" value="${esc(k.fileUrl)}" placeholder="https://...">
     </div>
     <div class="fg"><label>또는 파일 업로드 (PDF/PPT)</label>
       <div class="file-pick"><input type="file" accept=".pdf,.ppt,.pptx" class="kfile" data-kid="${k.id}">
-        <div class="file-pick-label">${k.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(k.fileName)}</span>`:
-        '<i class="ti ti-upload" style="opacity:.5"></i> PDF / PPT / PPTX'}</div></div>
+        <div class="file-pick-lbl">${k.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(k.fileName)}</span>`:'<i class="ti ti-upload"></i> PDF / PPT / PPTX'}</div>
+      </div>
       ${(k.fileData||k.fileUrl)?`<button onclick="clearKFile(${k.id})" style="margin-top:3px;font-size:.7rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 파일 제거</button>`:''}
     </div>
   </div>`).join('');
   return`<div class="sub-hd">특강 목록</div>
-  <p style="font-size:.73rem;color:var(--ets);margin-bottom:.8rem">PDF 파일은 클릭 시 미리보기, PPT는 다운로드됩니다.</p>
+  <p class="help-txt">PDF → 클릭 시 미리보기 · PPT → 다운로드<br>CDN URL 또는 파일 업로드 중 하나를 사용하세요.</p>
   ${items}<button class="add-btn" onclick="addKeynote()">+ 특강 추가</button>`;
 }
 
-/* --- Poster --- */
+/* ── Poster ── */
 function panelPoster(){
-  const items=D.posters.map((p,i)=>`
+  const items = D.posters.map((p,i)=>`
   <div class="icard">
     <div class="icard-hd"><span class="icard-num">${esc(p.num)}</span>
       <div class="icard-actions"><button class="ibtn del" onclick="removeItem('posters',${p.id})"><i class="ti ti-trash"></i></button></div>
@@ -619,236 +745,278 @@ function panelPoster(){
       <div class="fg"><label>저자 · 소속</label><input type="text" data-pid="${p.id}" data-pf="author" value="${esc(p.author)}"></div>
     </div>
     <div class="fg"><label>논문 제목</label><input type="text" data-pid="${p.id}" data-pf="title" value="${esc(p.title)}"></div>
-    <div class="fg"><label>자료 URL</label>
+    <div class="fg"><label>자료 URL (CDN 링크)</label>
       <input type="url" data-pid="${p.id}" data-pf="fileUrl" value="${esc(p.fileUrl)}" placeholder="https://...">
     </div>
     <div class="fg"><label>또는 파일 업로드</label>
       <div class="file-pick"><input type="file" accept=".pdf,.ppt,.pptx,image/*" class="pfile" data-pid="${p.id}">
-        <div class="file-pick-label">${p.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(p.fileName)}</span>`:
-        '<i class="ti ti-upload" style="opacity:.5"></i> PDF / PPT / 이미지'}</div></div>
+        <div class="file-pick-lbl">${p.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(p.fileName)}</span>`:'<i class="ti ti-upload"></i> PDF / PPT / 이미지'}</div>
+      </div>
       ${(p.fileData||p.fileUrl)?`<button onclick="clearPFile(${p.id})" style="margin-top:3px;font-size:.7rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 파일 제거</button>`:''}
     </div>
   </div>`).join('');
   return`<div class="sub-hd">포스터 목록</div>
-  <p style="font-size:.73rem;color:var(--ets);margin-bottom:.8rem">파일 첨부 시 카드 클릭으로 포스터를 볼 수 있습니다.</p>
+  <p class="help-txt">파일 첨부 시 카드 클릭으로 포스터를 볼 수 있습니다.</p>
   ${items}<button class="add-btn" onclick="addPoster()">+ 포스터 추가</button>`;
 }
 
-/* --- Sketch --- */
+/* ── Sketch ── */
 function panelSketch(){
-  const photos=D.sketch.photos;
-  const thumbs=photos.map((ph,i)=>`
+  const photos = D.sketch.photos;
+  const thumbs = photos.map((ph,i)=>`
   <div class="pthumb">
-    <img src="${ph.src}" alt="">
+    <img src="${imgSrc(ph)}" alt="">
     <button class="pthumb-del" onclick="removePhoto(${i})">✕</button>
   </div>`).join('');
-  const captions=photos.length?`<div class="sep"></div><div class="sub-hd">캡션 편집</div>
+  const captions = photos.length ? `<div class="sep"></div><div class="sub-hd">캡션 편집</div>
   ${photos.map((ph,i)=>`<div class="fg"><label>사진 ${i+1}</label>
     <input type="text" data-pi="${i}" value="${esc(ph.caption)}" placeholder="캡션 (선택사항)">
-  </div>`).join('')}`:'';
-  return`<div class="sub-hd">현장 스케치 갤러리</div>
-  <p style="font-size:.73rem;color:var(--ets);margin-bottom:.8rem">사진이 없으면 "추후 공개됩니다" 메시지가 표시됩니다.</p>
-  ${photos.length?`<div class="pgrid-ed">${thumbs}</div>`:''}
-  <div class="file-pick">
-    <input type="file" accept="image/*" multiple id="sketch-files">
-    <div class="file-pick-label"><i class="ti ti-photo" style="font-size:1.2rem;display:block;margin-bottom:3px;opacity:.5"></i>사진 추가 (여러 장 선택 가능)</div>
+  </div>`).join('')}` : '';
+  return`<div class="sub-hd">현장 스케치</div>
+  <p class="help-txt">사진이 없으면 "추후 공개됩니다" 메시지가 표시됩니다.<br>클릭하면 라이트박스로 크게 볼 수 있습니다.</p>
+  ${photos.length ? `<div class="pgrid-ed">${thumbs}</div>` : ''}
+  <div class="fg"><label>사진 파일 추가</label>
+    <div class="file-pick"><input type="file" accept="image/*" multiple id="sketch-files">
+      <div class="file-pick-lbl"><i class="ti ti-photo"></i>여러 장 선택 가능</div>
+    </div>
+    ${folderHint()}
+  </div>
+  <div class="fg"><label>또는 이미지 URL 추가</label>
+    <div style="display:flex;gap:6px">
+      <input type="url" id="sketch-url-input" placeholder="https://... (엔터로 추가)" style="flex:1;background:var(--ei);border:1px solid var(--eb);border-radius:6px;color:var(--et);font-family:inherit;font-size:.78rem;padding:6px 9px;outline:none">
+      <button onclick="addSketchUrl()" class="btn btn-g" style="padding:5px 10px;font-size:.75rem">추가</button>
+    </div>
   </div>
   ${captions}
-  ${photos.length?`<div class="sep"></div>
+  ${photos.length ? `<div class="sep"></div>
   <button onclick="if(confirm('모든 사진을 삭제할까요?')){D.sketch.photos=[];save();renderPreview();renderPanel()}"
-    style="width:100%;font-size:.75rem;background:none;border:1px solid #e05050;color:#e05050;padding:5px;border-radius:5px;cursor:pointer">모든 사진 삭제</button>`:''}`;
+    style="width:100%;font-size:.75rem;background:none;border:1px solid #e05050;color:#e05050;padding:5px;border-radius:5px;cursor:pointer">모든 사진 삭제</button>` : ''}`;
 }
 
 /* ================================================================
    BIND LISTENERS
 ================================================================ */
 function bindListeners(){
-  const a=document.getElementById('form-area');
+  const a = document.getElementById('form-area');
 
-  // Basic fields
+  /* Basic text fields */
   a.querySelectorAll('[data-f]').forEach(el=>{
-    el.addEventListener('input',()=>{D.basic[el.dataset.f]=el.value;save();renderPreview();});
+    el.addEventListener('input',()=>{ D.basic[el.dataset.f]=el.value; save(); renderPreview(); });
   });
 
-  // Hero image
-  const hf=a.querySelector('#hero-file');
-  if(hf) hf.addEventListener('change',e=>{
-    const f=e.target.files[0];if(!f)return;
-    readFile(f).then(d=>{D.basic.heroImage=d;save();renderPreview();renderPanel();});
+  /* Hero URL */
+  const heroUrl = a.querySelector('#hero-url');
+  if(heroUrl) heroUrl.addEventListener('change',()=>{
+    const v = heroUrl.value.trim();
+    D.basic.heroImage = v ? makeImg(v,v) : null;
+    save(); renderPreview(); renderPanel();
   });
 
-  // Greeting fields
+  /* Hero file */
+  const heroFile = a.querySelector('#hero-file');
+  if(heroFile) heroFile.addEventListener('change',async e=>{
+    const f = e.target.files[0]; if(!f) return;
+    D.basic.heroImage = await handleImgUpload(f);
+    save(); renderPreview(); renderPanel();
+  });
+
+  /* Greeting text */
   a.querySelectorAll('[data-gf]').forEach(el=>{
     el.addEventListener('input',()=>{
-      const g=D.greetings.find(x=>x.id==el.dataset.gid);
-      if(g){g[el.dataset.gf]=el.value;save();renderPreview();}
-    });
-  });
-  a.querySelectorAll('.gphoto').forEach(el=>{
-    el.addEventListener('change',e=>{
-      const f=e.target.files[0];if(!f)return;
-      const gid=+el.dataset.gid;
-      readFile(f).then(d=>{const g=D.greetings.find(x=>x.id===gid);if(g){g.photo=d;save();renderPreview();renderPanel();}});
+      const g = D.greetings.find(x=>x.id==el.dataset.gid);
+      if(g){ g[el.dataset.gf]=el.value; save(); renderPreview(); }
     });
   });
 
-  // Keynote fields
+  /* Greeting photo URL */
+  a.querySelectorAll('.gphoto-url').forEach(el=>{
+    el.addEventListener('change',()=>{
+      const g = D.greetings.find(x=>x.id==el.dataset.gid);
+      const v = el.value.trim();
+      if(g){ g.photo = v ? makeImg(v,v) : null; save(); renderPreview(); renderPanel(); }
+    });
+  });
+
+  /* Greeting photo file */
+  a.querySelectorAll('.gphoto-file').forEach(el=>{
+    el.addEventListener('change',async e=>{
+      const f = e.target.files[0]; if(!f) return;
+      const g = D.greetings.find(x=>x.id==+el.dataset.gid);
+      if(g){ g.photo = await handleImgUpload(f); save(); renderPreview(); renderPanel(); }
+    });
+  });
+
+  /* Keynote text */
   a.querySelectorAll('[data-kf]').forEach(el=>{
     el.addEventListener('input',()=>{
-      const k=D.keynotes.find(x=>x.id==el.dataset.kid);
-      if(k){k[el.dataset.kf]=el.value;save();renderPreview();}
-    });
-  });
-  a.querySelectorAll('.kfile').forEach(el=>{
-    el.addEventListener('change',e=>{
-      const f=e.target.files[0];if(!f)return;
-      const kid=+el.dataset.kid;
-      readFile(f).then(d=>{const k=D.keynotes.find(x=>x.id===kid);if(k){k.fileData=d;k.fileName=f.name;k.fileUrl='';save();renderPreview();renderPanel();}});
+      const k = D.keynotes.find(x=>x.id==el.dataset.kid);
+      if(k){ k[el.dataset.kf]=el.value; save(); renderPreview(); }
     });
   });
 
-  // Poster fields
+  /* Keynote file */
+  a.querySelectorAll('.kfile').forEach(el=>{
+    el.addEventListener('change',async e=>{
+      const f = e.target.files[0]; if(!f) return;
+      const kid = +el.dataset.kid;
+      const base64 = await readFile(f);
+      const k = D.keynotes.find(x=>x.id===kid);
+      if(k){ k.fileData=base64; k.fileName=f.name; k.fileUrl=''; save(); renderPreview(); renderPanel(); }
+    });
+  });
+
+  /* Poster text */
   a.querySelectorAll('[data-pf]').forEach(el=>{
     el.addEventListener('input',()=>{
-      const p=D.posters.find(x=>x.id==el.dataset.pid);
-      if(p){p[el.dataset.pf]=el.value;save();renderPreview();}
+      const p = D.posters.find(x=>x.id==el.dataset.pid);
+      if(p){ p[el.dataset.pf]=el.value; save(); renderPreview(); }
     });
   });
+
+  /* Poster file */
   a.querySelectorAll('.pfile').forEach(el=>{
-    el.addEventListener('change',e=>{
-      const f=e.target.files[0];if(!f)return;
-      const pid=+el.dataset.pid;
-      readFile(f).then(d=>{const p=D.posters.find(x=>x.id===pid);if(p){p.fileData=d;p.fileName=f.name;p.fileUrl='';save();renderPreview();renderPanel();}});
+    el.addEventListener('change',async e=>{
+      const f = e.target.files[0]; if(!f) return;
+      const pid = +el.dataset.pid;
+      const base64 = await readFile(f);
+      const p = D.posters.find(x=>x.id===pid);
+      if(p){ p.fileData=base64; p.fileName=f.name; p.fileUrl=''; save(); renderPreview(); renderPanel(); }
     });
   });
 
-  // Sketch photos
-  const sf=a.querySelector('#sketch-files');
-  if(sf) sf.addEventListener('change',e=>{
-    const files=Array.from(e.target.files);
-    Promise.all(files.map(readFile)).then(results=>{
-      results.forEach(d=>D.sketch.photos.push({src:d,caption:''}));
-      save();renderPreview();renderPanel();
-    });
+  /* Sketch files */
+  const sf = a.querySelector('#sketch-files');
+  if(sf) sf.addEventListener('change',async e=>{
+    const files = Array.from(e.target.files);
+    for(const f of files){
+      const img = await handleImgUpload(f);
+      D.sketch.photos.push({ ...img, caption:'' });
+    }
+    save(); renderPreview(); renderPanel();
   });
 
-  // Photo captions
+  /* Sketch URL enter key */
+  const sui = a.querySelector('#sketch-url-input');
+  if(sui) sui.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); addSketchUrl(); } });
+
+  /* Photo captions */
   a.querySelectorAll('[data-pi]').forEach(el=>{
     el.addEventListener('input',()=>{
-      const i=+el.dataset.pi;
-      if(D.sketch.photos[i])D.sketch.photos[i].caption=el.value;
-      save();renderPreview();
+      const i = +el.dataset.pi;
+      if(D.sketch.photos[i]) D.sketch.photos[i].caption = el.value;
+      save(); renderPreview();
     });
   });
 }
 
 /* ================================================================
-   CRUD HELPERS
+   CRUD
 ================================================================ */
-function removeItem(arr,id){D[arr]=D[arr].filter(x=>x.id!==id);save();renderPreview();renderPanel();}
-
+function removeItem(arr,id){ D[arr]=D[arr].filter(x=>x.id!==id); save(); renderPreview(); renderPanel(); }
 function addGreeting(){
   D.greetings.push({id:++uid,body:'',initial:'',name:'',org:'',role:'',photo:null});
-  save();renderPreview();renderPanel();
+  save(); renderPreview(); renderPanel();
 }
-function clearGPhoto(id){const g=D.greetings.find(x=>x.id===id);if(g){g.photo=null;save();renderPreview();renderPanel();}}
-
+function clearGPhoto(id){
+  const g=D.greetings.find(x=>x.id===id); if(g){g.photo=null;save();renderPreview();renderPanel();}
+}
 function addKeynote(){
   D.keynotes.push({id:++uid,title:'',presenter:'',time:'',fileUrl:'',fileData:null,fileName:''});
-  save();renderPreview();renderPanel();
+  save(); renderPreview(); renderPanel();
 }
-function clearKFile(id){const k=D.keynotes.find(x=>x.id===id);if(k){k.fileData=null;k.fileName='';k.fileUrl='';save();renderPreview();renderPanel();}}
-
+function clearKFile(id){
+  const k=D.keynotes.find(x=>x.id===id); if(k){k.fileData=null;k.fileName='';k.fileUrl='';save();renderPreview();renderPanel();}
+}
 function addPoster(){
   const n='P-'+String(D.posters.length+1).padStart(2,'0');
   D.posters.push({id:++uid,num:n,title:'',author:'',fileUrl:'',fileData:null,fileName:''});
-  save();renderPreview();renderPanel();
+  save(); renderPreview(); renderPanel();
 }
-function clearPFile(id){const p=D.posters.find(x=>x.id===id);if(p){p.fileData=null;p.fileName='';p.fileUrl='';save();renderPreview();renderPanel();}}
-
-function removePhoto(i){D.sketch.photos.splice(i,1);save();renderPreview();renderPanel();}
+function clearPFile(id){
+  const p=D.posters.find(x=>x.id===id); if(p){p.fileData=null;p.fileName='';p.fileUrl='';save();renderPreview();renderPanel();}
+}
+function removePhoto(i){ D.sketch.photos.splice(i,1); save(); renderPreview(); renderPanel(); }
+function addSketchUrl(){
+  const inp = document.getElementById('sketch-url-input');
+  if(!inp) return;
+  const v = inp.value.trim(); if(!v) return;
+  D.sketch.photos.push({ src:v, exportRef:v, caption:'' });
+  save(); renderPreview(); renderPanel();
+}
 
 /* ================================================================
    RESET
 ================================================================ */
 function resetData(){
-  if(!confirm('모든 내용을 초기화할까요? 저장된 데이터가 삭제됩니다.'))return;
-  D=JSON.parse(JSON.stringify(DEFAULT));
-  localStorage.removeItem('conf-ed');
-  renderPreview();renderPanel();
+  if(!confirm('모든 내용을 초기화할까요? 저장된 데이터가 삭제됩니다.')) return;
+  D = JSON.parse(JSON.stringify(DEFAULT));
+  localStorage.removeItem('conf-ed-v2'); localStorage.removeItem('conf-ed');
+  renderPreview(); renderPanel();
 }
 
 /* ================================================================
    EXPORT
 ================================================================ */
 function exportHTML(){
-  const b=D.basic;
+  const b = D.basic;
+  const heroRef = imgExportRef(b.heroImage);
+  const heroImg = heroRef
+    ? `<img src="${heroRef}" alt="대표 이미지" style="width:100%;height:auto;border-radius:12px;border:1px solid #e0ded6;display:block">`
+    : `<div style="width:100%;height:160px;background:linear-gradient(135deg,#E6F1FB,#B5D4F4);border-radius:12px;border:1px dashed #B5D4F4;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#185FA5;gap:6px;font-size:.82rem;opacity:.7">대표 이미지 삽입 영역</div>`;
 
-  const heroImg=b.heroImage
-    ?`<img src="${b.heroImage}" alt="대표 이미지" style="width:100%;height:280px;object-fit:cover;border-radius:12px;border:1px solid #e0ded6;display:block">`
-    :`<div style="width:100%;height:180px;background:linear-gradient(135deg,#E6F1FB,#B5D4F4);border-radius:12px;border:1px dashed #B5D4F4;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#185FA5;gap:6px;font-size:.82rem;opacity:.7">대표 이미지 삽입 영역</div>`;
+  const greetingsHtml = D.greetings.map(g=>{
+    const ref = imgExportRef(g.photo);
+    const av = ref
+      ? `<div style="width:88px;height:88px;border-radius:50%;overflow:hidden;margin-bottom:.8rem;border:1px solid #e0ded6;flex-shrink:0"><img src="${ref}" alt="${esc(g.name)}" style="width:100%;height:100%;object-fit:cover"></div>`
+      : `<div style="width:88px;height:88px;border-radius:50%;background:#E6F1FB;border:1px solid #B5D4F4;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#185FA5;margin-bottom:.8rem;flex-shrink:0">${esc(g.initial)}</div>`;
+    return`<div class="greeting-card">
+      <div class="gbody">${esc(g.body)}</div>
+      <div class="ginfo">${av}
+        <div class="gname">${esc(g.name)}</div>
+        <div class="gorg">${esc(g.org)}<br>${esc(g.role)}</div>
+      </div></div>`;
+  }).join('');
 
-  const greetingsHtml=D.greetings.map(g=>{
-    const av=g.photo
-      ?`<div style="width:88px;height:88px;border-radius:50%;overflow:hidden;margin-bottom:.8rem;border:1px solid #e0ded6"><img src="${g.photo}" alt="${esc(g.name)}" style="width:100%;height:100%;object-fit:cover"></div>`
-      :`<div style="width:88px;height:88px;border-radius:50%;background:#E6F1FB;border:1px solid #B5D4F4;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#185FA5;margin-bottom:.8rem">${esc(g.initial)}</div>`;
-    return`<div style="background:#fff;border:1px solid #e0ded6;border-radius:12px;padding:2rem;display:grid;grid-template-columns:1fr 160px;gap:2rem;margin-bottom:1.2rem">
-      <div style="font-family:'Noto Serif KR',serif;font-size:.92rem;color:#5f5e5a;line-height:2">${esc(g.body)}</div>
-      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:.5rem">
-        ${av}
-        <div style="font-size:.92rem;font-weight:700;margin-bottom:4px">${esc(g.name)}</div>
-        <div style="font-size:.78rem;color:#5f5e5a;line-height:1.5">${esc(g.org)}<br>${esc(g.role)}</div>
-      </div>
+  const keynotesHtml = D.keynotes.map(k=>{
+    const fo = getFileObj(k);
+    const click = fo ? `onclick="openFile(${JSON.stringify(JSON.stringify(fo)).slice(1,-1).replace(/'/g,"\\'")},'${esc(k.title).replace(/'/g,"\\'")}')"` : '';
+    const hover = fo ? `onmouseenter="this.style.cssText+=';border-color:#185FA5;background:#E6F1FB'" onmouseleave="this.style.cssText+=';border-color:#e0ded6;background:#fff'"` : '';
+    const badge = fo ? `<span class="fbadge">&#128196; 자료 보기</span>` : '';
+    return`<div class="item${fo?' clickable':''}" ${click} ${hover}>
+      <div><div class="ititle">${esc(k.title)}</div><div class="iauth">${esc(k.presenter)}</div></div>
+      <div class="iright"><span class="itime">${esc(k.time)}</span>${badge}</div>
     </div>`;
   }).join('');
 
-  const keynotesHtml=D.keynotes.map(k=>{
-    const fo=getFileObj(k);
-    const clickable=fo?`style="cursor:pointer" onclick="openFile(${JSON.stringify(JSON.stringify(fo)).slice(1,-1).replace(/"/g,'&quot;')},'${esc(k.title)}')" onmouseenter="this.style.borderColor='#185FA5';this.style.background='#E6F1FB'" onmouseleave="this.style.borderColor='#e0ded6';this.style.background='#fff'"`:'' ;
-    const badge=fo?`<span style="display:inline-flex;align-items:center;gap:3px;font-size:.72rem;font-weight:600;color:#185FA5;background:#E6F1FB;padding:2px 7px;border-radius:4px">&#128196; 자료 보기</span>`:'';
-    return`<div ${clickable} style="background:#fff;border:1px solid #e0ded6;border-radius:8px;padding:1rem 1.25rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;transition:border-color .2s">
-      <div><div style="font-size:.94rem;font-weight:500;margin-bottom:4px">${esc(k.title)}</div>
-        <div style="font-size:.8rem;color:#5f5e5a">${esc(k.presenter)}</div></div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-        <div style="font-size:.8rem;color:#888780;white-space:nowrap">${esc(k.time)}</div>${badge}
-      </div>
-    </div>`;
-  }).join('');
-
-  const postersHtml=D.posters.map(p=>{
-    const fo=getFileObj(p);
-    const clickable=fo?`style="cursor:pointer" onclick="openFile(${JSON.stringify(JSON.stringify(fo)).slice(1,-1).replace(/"/g,'&quot;')},'${esc(p.title)}')" onmouseenter="this.style.borderColor='#185FA5';this.style.background='#E6F1FB'" onmouseleave="this.style.borderColor='#e0ded6';this.style.background='#fff'"`:'' ;
-    const badge=fo?`<div style="margin-top:6px"><span style="display:inline-flex;align-items:center;gap:3px;font-size:.72rem;font-weight:600;color:#185FA5;background:#E6F1FB;padding:2px 7px;border-radius:4px">&#128279; 보기</span></div>`:'';
-    return`<div ${clickable} style="background:#fff;border:1px solid #e0ded6;border-radius:8px;padding:1rem 1.1rem;transition:all .2s">
-      <div style="font-size:11px;font-weight:700;color:#3B6D11;margin-bottom:6px">${esc(p.num)}</div>
-      <div style="font-size:.86rem;font-weight:500;line-height:1.5;margin-bottom:8px">${esc(p.title)}</div>
-      <div style="font-size:.78rem;color:#5f5e5a">${esc(p.author)}</div>${badge}
+  const postersHtml = D.posters.map(p=>{
+    const fo = getFileObj(p);
+    const click = fo ? `onclick="openFile(${JSON.stringify(JSON.stringify(fo)).slice(1,-1).replace(/'/g,"\\'")},'${esc(p.title).replace(/'/g,"\\'")}')"` : '';
+    const hover = fo ? `onmouseenter="this.style.cssText+=';border-color:#185FA5;background:#E6F1FB'" onmouseleave="this.style.cssText+=';border-color:#e0ded6;background:#fff'"` : '';
+    const badge = fo ? `<div style="margin-top:6px"><span class="fbadge">&#128279; 보기</span></div>` : '';
+    return`<div class="pcard${fo?' clickable':''}" ${click} ${hover}>
+      <div class="pnum">${esc(p.num)}</div>
+      <div class="ptitle">${esc(p.title)}</div>
+      <div class="pauth">${esc(p.author)}</div>${badge}
     </div>`;
   }).join('');
 
   let sketchHtml;
   if(D.sketch.photos.length===0){
-    sketchHtml=`<div style="text-align:center;padding:3.5rem 2rem;background:#fff;border:1px dashed #e0ded6;border-radius:12px;color:#5f5e5a">
-      <div style="font-size:2.5rem;opacity:.25;margin-bottom:.8rem">📷</div>
-      <p style="font-size:.9rem">현장 스케치 사진을 준비 중입니다.</p>
-      <p style="font-size:.78rem;opacity:.6;margin-top:.3rem">추후 공개됩니다</p>
-    </div>`;
+    sketchHtml=`<div class="sk-ph"><div class="sk-icon">📷</div>
+      <p>현장 스케치 사진을 준비 중입니다.</p>
+      <p class="sk-sub">추후 공개됩니다</p></div>`;
   }else{
-    const imgs=D.sketch.photos.map((ph,i)=>`
-      <div onclick="openLightbox(${i})" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;background:#f1efe8;position:relative">
-        <img src="${ph.src}" alt="${esc(ph.caption)||'현장 스케치'}" style="width:100%;height:100%;object-fit:cover;transition:transform .3s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
-        ${ph.caption?`<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent);color:#fff;font-size:.75rem;padding:1rem .6rem .5rem">${esc(ph.caption)}</div>`:''}
+    const imgs = D.sketch.photos.map((ph,i)=>`
+      <div class="photo-item" onclick="openLightbox(${i})">
+        <img src="${imgExportRef(ph)}" alt="${esc(ph.caption)||'현장 스케치'}">
+        ${ph.caption?`<div class="photo-cap">${esc(ph.caption)}</div>`:''}
       </div>`).join('');
-    sketchHtml=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem">${imgs}</div>`;
+    sketchHtml = `<div class="photo-grid">${imgs}</div>`;
   }
 
-  // Embed sketch photos as JSON for lightbox
-  const photosJSON=JSON.stringify(D.sketch.photos.map(ph=>({src:ph.src,caption:ph.caption})));
-  // Embed file data for keynotes/posters
-  const kDataJSON=JSON.stringify(D.keynotes.map(k=>({id:k.id,fileData:k.fileData,fileName:k.fileName,fileUrl:k.fileUrl})));
-  const pDataJSON=JSON.stringify(D.posters.map(p=>({id:p.id,fileData:p.fileData,fileName:p.fileName,fileUrl:p.fileUrl})));
+  const photosJSON = JSON.stringify(D.sketch.photos.map(ph=>({src:imgExportRef(ph),caption:ph.caption||''})));
 
-  const html=`<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -874,7 +1042,35 @@ nav{background:#fff;border-bottom:1px solid #e0ded6;position:sticky;top:0;z-inde
 .hero-meta{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:2rem}
 .hero-meta span{font-size:.88rem;color:#5f5e5a;display:flex;align-items:center;gap:5px}
 .hero-img{max-width:860px;margin:0 auto}
+.greeting-card{background:#fff;border:1px solid #e0ded6;border-radius:12px;padding:2rem;display:grid;grid-template-columns:1fr 160px;gap:2rem;margin-bottom:1.2rem}
+.greeting-card:last-child{margin-bottom:0}
+.gbody{font-family:'Noto Serif KR',serif;font-size:.92rem;color:#5f5e5a;line-height:2}
+.ginfo{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:.5rem}
+.gname{font-size:.92rem;font-weight:700;margin-bottom:4px}
+.gorg{font-size:.78rem;color:#5f5e5a;line-height:1.5}
+.item{background:#fff;border:1px solid #e0ded6;border-radius:8px;padding:1rem 1.25rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;transition:border-color .2s}
+.item:last-child{margin-bottom:0}
+.item.clickable{cursor:pointer}
+.ititle{font-size:.94rem;font-weight:500;margin-bottom:4px}
+.iauth{font-size:.8rem;color:#5f5e5a}
+.iright{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.itime{font-size:.8rem;color:#888780;white-space:nowrap}
+.fbadge{display:inline-flex;align-items:center;gap:3px;font-size:.72rem;font-weight:600;color:#185FA5;background:#E6F1FB;padding:2px 7px;border-radius:4px}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.pcard{background:#fff;border:1px solid #e0ded6;border-radius:8px;padding:1rem 1.1rem;transition:all .2s}
+.pcard.clickable{cursor:pointer}
+.pnum{font-size:11px;font-weight:700;color:#3B6D11;margin-bottom:6px;letter-spacing:.05em}
+.ptitle{font-size:.86rem;font-weight:500;line-height:1.5;margin-bottom:8px}
+.pauth{font-size:.78rem;color:#5f5e5a}
+.sk-ph{text-align:center;padding:3.5rem 2rem;background:#fff;border:1px dashed #e0ded6;border-radius:12px;color:#5f5e5a}
+.sk-icon{font-size:2.5rem;opacity:.25;margin-bottom:.8rem}
+.sk-sub{font-size:.78rem;opacity:.6;margin-top:.3rem}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem}
+.photo-item{border-radius:8px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;background:#f1efe8;position:relative}
+.photo-item img{width:100%;height:100%;object-fit:cover;transition:transform .3s;display:block}
+.photo-item:hover img{transform:scale(1.04)}
+.photo-cap{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent);color:#fff;font-size:.75rem;padding:1rem .6rem .5rem;opacity:0;transition:opacity .2s}
+.photo-item:hover .photo-cap{opacity:1}
 footer{background:#fff;border-top:1px solid #e0ded6;padding:2rem;text-align:center;font-size:.83rem;color:#5f5e5a}
 footer a{color:#185FA5;text-decoration:none}
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9000;align-items:center;justify-content:center}
@@ -885,25 +1081,28 @@ footer a{color:#185FA5;text-decoration:none}
 .fmodal-body{flex:1;overflow:hidden}
 .fmodal-body iframe{width:100%;height:70vh;border:none;display:block}
 .fmodal-dl{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;gap:1rem;min-height:250px;color:#5f5e5a}
-.fmodal-dl i{font-size:3rem;color:#185FA5}
 .fmodal-dl a{display:inline-flex;align-items:center;gap:6px;background:#185FA5;color:#fff;padding:8px 20px;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:600}
 .lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
 .lb.open{display:flex}
 .lb-wrap{position:relative;display:flex;align-items:center;justify-content:center;max-width:90vw;max-height:82vh}
 .lb-wrap img{max-width:90vw;max-height:82vh;object-fit:contain;border-radius:6px}
-.lb-btn{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:50%;width:42px;height:42px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center}
+.lb-btn{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:50%;width:42px;height:42px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:background .15s}
 .lb-btn:hover{background:rgba(255,255,255,.22)}
-.lb-close-btn{position:fixed;top:1rem;right:1rem}
-.lb-nav{position:absolute;top:50%;transform:translateY(-50%)}
-.lb-prev{left:-58px}.lb-next{right:-58px}
+.lb-close-pos{position:fixed;top:1rem;right:1rem}
+.lb-prev{position:absolute;top:50%;transform:translateY(-50%);left:-56px}
+.lb-next{position:absolute;top:50%;transform:translateY(-50%);right:-56px}
 .lb-cap{color:rgba(255,255,255,.75);font-size:.82rem;text-align:center}
 .lb-cnt{color:rgba(255,255,255,.45);font-size:.74rem}
+/* ── Mobile ── */
 @media(max-width:600px){
-  .greeting-card{grid-template-columns:1fr!important}
+  .greeting-card{grid-template-columns:1fr}
+  .ginfo{flex-direction:row;text-align:left;gap:1rem;align-items:flex-start}
   .hero-meta{flex-direction:column;align-items:center;gap:.6rem}
   .con{padding:2rem 1.2rem}
   nav{padding:0 1.2rem}
   .div{margin:0 1.2rem}
+  .hero{padding:2.5rem 1.2rem 2rem}
+  .lb-prev,.lb-next{display:none}
 }
 </style>
 </head>
@@ -960,7 +1159,7 @@ footer a{color:#185FA5;text-decoration:none}
   <div class="fmodal" onclick="event.stopPropagation()">
     <div class="fmodal-hd">
       <span id="fm-title" style="font-size:.88rem;font-weight:600">자료 보기</span>
-      <button class="fmodal-close" onclick="closeFM()"><i class="ti ti-x"></i></button>
+      <button class="fmodal-close" onclick="closeFM()">✕</button>
     </div>
     <div class="fmodal-body" id="fm-body"></div>
   </div>
@@ -968,11 +1167,11 @@ footer a{color:#185FA5;text-decoration:none}
 
 <!-- Lightbox -->
 <div class="lb" id="lb" onclick="if(event.target===this)closeLB()">
-  <button class="lb-btn lb-close-btn" onclick="closeLB()"><i class="ti ti-x"></i></button>
+  <button class="lb-btn lb-close-pos" onclick="closeLB()">✕</button>
   <div class="lb-wrap" onclick="event.stopPropagation()">
-    <button class="lb-btn lb-nav lb-prev" onclick="lbNav(-1)"><i class="ti ti-chevron-left"></i></button>
+    <button class="lb-btn lb-prev" onclick="lbNav(-1)">&#8249;</button>
     <img id="lb-img" src="" alt="">
-    <button class="lb-btn lb-nav lb-next" onclick="lbNav(1)"><i class="ti ti-chevron-right"></i></button>
+    <button class="lb-btn lb-next" onclick="lbNav(1)">&#8250;</button>
   </div>
   <div class="lb-cap" id="lb-cap"></div>
   <div class="lb-cnt" id="lb-cnt"></div>
@@ -981,15 +1180,12 @@ footer a{color:#185FA5;text-decoration:none}
 <script>
 const PHOTOS=${photosJSON};
 let lbI=0;
-
 function openFile(foStr,title){
-  let fo;try{fo=JSON.parse(foStr);}catch(e){return;}
-  if(!fo)return;
+  let fo;try{fo=JSON.parse(foStr);}catch(e){return;}if(!fo)return;
   document.getElementById('fm-title').textContent=title||'자료 보기';
   const body=document.getElementById('fm-body');body.innerHTML='';
   let src='',pdf=false,fname='';
-  function isPDF(n,d){return(d&&d.startsWith('data:application/pdf'))||(n&&/\\.pdf$/i.test(n));}
-  if(fo.type==='url'){src=fo.url;pdf=isPDF(fo.url);fname=fo.name||'파일';}
+  if(fo.type==='url'){src=fo.url;pdf=/\\.pdf$/i.test(fo.url);fname=fo.name||'파일';}
   else if(fo.type==='b64'){
     const mime=fo.data.split(';')[0].split(':')[1];pdf=mime==='application/pdf';
     const b=atob(fo.data.split(',')[1]),ab=new ArrayBuffer(b.length),ia=new Uint8Array(ab);
@@ -997,11 +1193,10 @@ function openFile(foStr,title){
     src=URL.createObjectURL(new Blob([ab],{type:mime}));fname=fo.name||'파일';
   }
   if(pdf){body.innerHTML='<iframe src="'+src+'#toolbar=1"></iframe>';}
-  else{body.innerHTML='<div class="fmodal-dl"><i class="ti ti-file-presentation"></i><p>이 파일 형식은 브라우저에서 바로 볼 수 없습니다.<br>아래 버튼을 눌러 다운로드하세요.</p><a href="'+src+'" download="'+fname+'" target="_blank"><i class="ti ti-download"></i>다운로드</a></div>';}
+  else{body.innerHTML='<div class="fmodal-dl"><p style="font-size:.9rem;color:#5f5e5a">이 파일은 브라우저에서 직접 볼 수 없습니다.</p><a href="'+src+'" download="'+fname+'" target="_blank">&#8595; 다운로드</a></div>';}
   document.getElementById('fov').classList.add('open');
 }
 function closeFM(){document.getElementById('fov').classList.remove('open');document.getElementById('fm-body').innerHTML='';}
-
 function openLightbox(i){lbI=i;showLB();document.getElementById('lb').classList.add('open');}
 function showLB(){const ph=PHOTOS[lbI];if(!ph)return;document.getElementById('lb-img').src=ph.src;document.getElementById('lb-cap').textContent=ph.caption||'';document.getElementById('lb-cnt').textContent=(lbI+1)+' / '+PHOTOS.length;}
 function lbNav(d){lbI=(lbI+d+PHOTOS.length)%PHOTOS.length;showLB();}
@@ -1010,21 +1205,19 @@ document.addEventListener('keydown',e=>{
   if(document.getElementById('lb').classList.contains('open')){if(e.key==='ArrowLeft')lbNav(-1);else if(e.key==='ArrowRight')lbNav(1);else if(e.key==='Escape')closeLB();}
   if(document.getElementById('fov').classList.contains('open')&&e.key==='Escape')closeFM();
 });
-
-// Nav highlight
-const links=document.querySelectorAll('.nav-inner a');
+const navLinks=document.querySelectorAll('.nav-inner a');
 const secs=document.querySelectorAll('section[id]');
-const obs=new IntersectionObserver(entries=>{entries.forEach(en=>{if(en.isIntersecting){links.forEach(l=>l.classList.remove('active'));const a=document.querySelector('.nav-inner a[href="#'+en.target.id+'"]');if(a)a.classList.add('active');}});},{rootMargin:'-40% 0px -50% 0px'});
+const obs=new IntersectionObserver(entries=>{entries.forEach(en=>{if(en.isIntersecting){navLinks.forEach(l=>l.classList.remove('active'));const a=document.querySelector('.nav-inner a[href="#'+en.target.id+'"]');if(a)a.classList.add('active');}});},{rootMargin:'-40% 0px -50% 0px'});
 secs.forEach(s=>obs.observe(s));
-links.forEach(l=>l.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(l.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'});}));
+navLinks.forEach(l=>l.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(l.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'});}));
 <\/script>
 </body>
 </html>`;
 
-  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='conference.html';a.click();
+  const blob = new Blob([html],{type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='conference.html'; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -1034,6 +1227,7 @@ links.forEach(l=>l.addEventListener('click',e=>{e.preventDefault();const t=docum
 loadSaved();
 renderPreview();
 renderPanel();
+updateFolderUI();
 </script>
 </body>
 </html>
