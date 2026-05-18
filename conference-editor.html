@@ -148,6 +148,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
 #preview .p-pnum{font-size:11px;font-weight:700;color:var(--cs);margin-bottom:6px;letter-spacing:.05em}
 #preview .p-ptitle{font-size:.86rem;font-weight:500;line-height:1.5;margin-bottom:8px}
 #preview .p-pauthor{font-size:.78rem;color:var(--cts)}
+/* Award badges */
+#preview .p-pcard.award-best{border-color:#c9a227!important;border-width:2px}
+#preview .p-pcard.award-great{border-color:#9e9e9e!important;border-width:2px}
+#preview .p-pcard.award-encour{border-color:#cd7f32!important;border-width:2px}
+#preview .p-award-badge{display:inline-flex;align-items:center;gap:3px;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:6px}
+#preview .p-award-badge.best{background:#fff8dc;color:#8a6800}
+#preview .p-award-badge.great{background:#f0f0f0;color:#555}
+#preview .p-award-badge.encour{background:#fdf0e8;color:#8b4513}
 
 /* Sketch */
 #preview .p-sk-ph{text-align:center;padding:3.5rem 2rem;background:var(--cw);border:1px dashed var(--cb);border-radius:var(--rlg);color:var(--cts)}
@@ -235,7 +243,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
     <div class="tab-strip">
       <button class="stab active" data-tab="basic"    onclick="switchTab('basic')">기본 정보</button>
       <button class="stab"        data-tab="greeting" onclick="switchTab('greeting')">축사</button>
-      <button class="stab"        data-tab="keynote"  onclick="switchTab('keynote')">특강</button>
+      <button class="stab"        data-tab="keynote"  onclick="switchTab('keynote')">발제</button>
       <button class="stab"        data-tab="poster"   onclick="switchTab('poster')">포스터</button>
       <button class="stab"        data-tab="sketch"   onclick="switchTab('sketch')">현장 스케치</button>
     </div>
@@ -296,14 +304,14 @@ const DEFAULT = {
     {id:2,title:'글로벌 게임정책 동향과 한국의 과제',presenter:'Jane Smith · Senior Policy Analyst, OECD',time:'10:45–11:45',fileUrl:'',filePath:'',fileData:null,fileName:''}
   ],
   posters:[
-    {id:1,num:'P-01',title:'게임 과몰입 예방정책의 비교법적 검토',author:'김아름 · 이화여자대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
-    {id:2,num:'P-02',title:'클라우드 게임 서비스 규제 현황과 개선 방안',author:'박준호 · 부산대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
-    {id:3,num:'P-03',title:'e스포츠 선수 노동권 보호 법제 연구',author:'신민서 · 중앙대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
-    {id:4,num:'P-04',title:'게임 크리에이터 경제와 저작권 정책',author:'한동현 · 경희대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
-    {id:5,num:'P-05',title:'미성년자 게임 이용 시간 제한 정책의 실증 분석',author:'윤소희 · 전남대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
-    {id:6,num:'P-06',title:'게임 세계관과 광고 규제의 경계',author:'강태현 · 서강대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
-    {id:7,num:'P-07',title:'장애인 게임 접근성 정책 현황과 개선 방향',author:'임채영 · 한국복지대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
-    {id:8,num:'P-08',title:'게임 인플루언서 마케팅 규제 이슈 검토',author:'오세진 · 홍익대학교',fileUrl:'',filePath:'',fileData:null,fileName:''}
+    {id:1,num:'P-01',title:'게임 과몰입 예방정책의 비교법적 검토',author:'김아름 · 이화여자대학교',fileUrl:'',filePath:'',fileData:null,fileName:'',award:''},
+    {id:2,num:'P-02',title:'클라우드 게임 서비스 규제 현황과 개선 방안',author:'박준호 · 부산대학교',fileUrl:'',filePath:'',fileData:null,fileName:'',award:''},
+    {id:3,num:'P-03',title:'e스포츠 선수 노동권 보호 법제 연구',author:'신민서 · 중앙대학교',fileUrl:'',filePath:'',fileData:null,fileName:'',award:''},
+    {id:4,num:'P-04',title:'게임 크리에이터 경제와 저작권 정책',author:'한동현 · 경희대학교',fileUrl:'',filePath:'',fileData:null,fileName:'',award:''},
+    {id:5,num:'P-05',title:'미성년자 게임 이용 시간 제한 정책의 실증 분석',author:'윤소희 · 전남대학교',fileUrl:'',filePath:'',fileData:null,fileName:'',award:''},
+    {id:6,num:'P-06',title:'게임 세계관과 광고 규제의 경계',author:'강태현 · 서강대학교',fileUrl:'',filePath:'',fileData:null,fileName:'',award:''},
+    {id:7,num:'P-07',title:'장애인 게임 접근성 정책 현황과 개선 방향',author:'임채영 · 한국복지대학교',fileUrl:'',filePath:'',fileData:null,fileName:'',award:''},
+    {id:8,num:'P-08',title:'게임 인플루언서 마케팅 규제 이슈 검토',author:'오세진 · 홍익대학교',fileUrl:'',filePath:'',fileData:null,fileName:'',award:''}
   ],
   sketch:{photos:[]}
 };
@@ -409,6 +417,9 @@ async function handleImgUpload(file){
 function isPDF(name,data){
   return (data && data.startsWith('data:application/pdf')) || (name && /\.pdf$/i.test(name));
 }
+function isImageFile(name,data){
+  return (data && /^data:image\//i.test(data)) || (name && /\.(jpe?g|png|gif|webp|svg|bmp)$/i.test(name));
+}
 /* 에디터 미리보기용: base64 우선 (항상 프리뷰 가능) */
 function getFilePreviewObj(item){
   if(item.fileData) return{type:'b64',data:item.fileData,name:item.fileName};
@@ -497,15 +508,20 @@ function buildPage(){
       <div><div class="p-ititle">${esc(k.title)}</div><div class="p-iauthors">${esc(k.presenter)}</div></div>
       <div class="p-iright"><div class="p-itime">${esc(k.time)}</div>${badge}</div>
     </div>`;
-  }).join('') || '<p style="color:#aaa;font-size:.88rem">특강 항목을 추가하세요.</p>';
+  }).join('') || '<p style="color:#aaa;font-size:.88rem">발제 항목을 추가하세요.</p>';
 
   const postersHtml = D.posters.map(p=>{
-    const fo = getFilePreviewObj(p); /* 에디터 미리보기: base64 우선 */
+    const fo = getFilePreviewObj(p);
     const cls = fo ? 'p-pcard clickable' : 'p-pcard';
+    const awardCls = p.award==='최우수' ? ' award-best' : p.award==='우수' ? ' award-great' : p.award==='장려' ? ' award-encour' : '';
     const fattr = fo ? `data-file='${JSON.stringify(fo)}' data-title="${esc(p.title)}"` : '';
+    const awardBadge = p.award==='최우수' ? `<div><span class="p-award-badge best">🥇 최우수 논문상</span></div>`
+      : p.award==='우수' ? `<div><span class="p-award-badge great">🥈 우수 논문상</span></div>`
+      : p.award==='장려' ? `<div><span class="p-award-badge encour">🥉 장려상</span></div>`
+      : '';
     const badge = fo ? `<div style="margin-top:6px"><span class="p-fbadge"><i class="ti ti-external-link"></i>보기</span></div>` : '';
-    return`<div class="${cls}" ${fattr}>
-      <div class="p-pnum">${esc(p.num)}</div>
+    return`<div class="${cls}${awardCls}" ${fattr}>
+      ${awardBadge}<div class="p-pnum">${esc(p.num)}</div>
       <div class="p-ptitle">${esc(p.title)}</div>
       <div class="p-pauthor">${esc(p.author)}</div>${badge}
     </div>`;
@@ -527,7 +543,7 @@ function buildPage(){
 
   return`
     <nav class="p-nav"><div class="p-nav-inner">
-      <a href="#p-greeting">축사</a><a href="#p-keynote">특강</a>
+      <a href="#p-greeting">축사</a><a href="#p-keynote">발제</a>
       <a href="#p-poster">포스터 발표</a><a href="#p-sketch">현장 스케치</a>
     </div></nav>
     <div class="p-hero">
@@ -546,7 +562,7 @@ function buildPage(){
     </div></section>
     <div class="p-div"></div>
     <section id="p-keynote"><div class="p-con">
-      <div class="p-slabel">Keynote</div><div class="p-stitle">특강</div>${keynotesHtml}
+      <div class="p-slabel">발제</div><div class="p-stitle">발제</div>${keynotesHtml}
     </div></section>
     <div class="p-div"></div>
     <section id="p-poster"><div class="p-con">
@@ -576,18 +592,22 @@ function openFile(fo, title){
 
   let src = '', pdf = false, fname = '';
 
+  let img = false;
   if(fo.type === 'path'){
     /* NAS 호스팅 환경: 상대경로로 직접 로드 */
     src = fo.path;
     pdf = /\.pdf$/i.test(fo.path);
+    img = isImageFile(fo.path, null);
     fname = fo.name || fo.path.split('/').pop();
   } else if(fo.type === 'url'){
     src = fo.url;
     pdf = isPDF(fo.url);
+    img = isImageFile(fo.url, null);
     fname = fo.name || '파일';
   } else if(fo.type === 'b64'){
     const mime = fo.data.split(';')[0].split(':')[1];
     pdf = mime === 'application/pdf';
+    img = /^image\//i.test(mime);
     const b = atob(fo.data.split(',')[1]), ab = new ArrayBuffer(b.length), ia = new Uint8Array(ab);
     for(let i=0;i<b.length;i++) ia[i] = b.charCodeAt(i);
     src = URL.createObjectURL(new Blob([ab],{type:mime}));
@@ -601,6 +621,8 @@ function openFile(fo, title){
 
   if(pdf){
     body.innerHTML = `<iframe src="${src}#toolbar=0&navpanes=0" title="${esc(title||'')}"></iframe>`;
+  } else if(img){
+    body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;padding:1rem;background:#000;min-height:200px;max-height:75vh;overflow:auto"><img src="${src}" alt="${esc(title||'')}" style="max-width:100%;max-height:73vh;object-fit:contain;border-radius:6px"></div>`;
   } else {
     body.innerHTML = `<div class="fmodal-dl">
       <i class="ti ti-file-text" style="font-size:3rem;color:#185FA5"></i>
@@ -718,7 +740,11 @@ function panelGreeting(){
   const items = D.greetings.map((g,i)=>`
   <div class="icard">
     <div class="icard-hd"><span class="icard-num">축사 ${i+1}</span>
-      <div class="icard-actions"><button class="ibtn del" onclick="removeItem('greetings',${g.id})"><i class="ti ti-trash"></i></button></div>
+      <div class="icard-actions">
+        <button class="ibtn" onclick="moveItem('greetings',${g.id},-1)" title="위로"><i class="ti ti-arrow-up"></i></button>
+        <button class="ibtn" onclick="moveItem('greetings',${g.id},1)" title="아래로"><i class="ti ti-arrow-down"></i></button>
+        <button class="ibtn del" onclick="removeItem('greetings',${g.id})"><i class="ti ti-trash"></i></button>
+      </div>
     </div>
     <div class="fg"><label>축사 본문</label><textarea data-gid="${g.id}" data-gf="body">${esc(g.body)}</textarea></div>
     <div class="row2">
@@ -742,14 +768,18 @@ function panelGreeting(){
   <button class="add-btn" onclick="addGreeting()">+ 축사 추가</button>`;
 }
 
-/* ── Keynote ── */
+/* ── Keynote (발제) ── */
 function panelKeynote(){
   const items = D.keynotes.map((k,i)=>`
   <div class="icard">
-    <div class="icard-hd"><span class="icard-num">특강 ${i+1}</span>
-      <div class="icard-actions"><button class="ibtn del" onclick="removeItem('keynotes',${k.id})"><i class="ti ti-trash"></i></button></div>
+    <div class="icard-hd"><span class="icard-num">발제 ${i+1}</span>
+      <div class="icard-actions">
+        <button class="ibtn" onclick="moveItem('keynotes',${k.id},-1)" title="위로"><i class="ti ti-arrow-up"></i></button>
+        <button class="ibtn" onclick="moveItem('keynotes',${k.id},1)" title="아래로"><i class="ti ti-arrow-down"></i></button>
+        <button class="ibtn del" onclick="removeItem('keynotes',${k.id})"><i class="ti ti-trash"></i></button>
+      </div>
     </div>
-    <div class="fg"><label>특강 제목</label><input type="text" data-kid="${k.id}" data-kf="title" value="${esc(k.title)}"></div>
+    <div class="fg"><label>발제 제목</label><input type="text" data-kid="${k.id}" data-kf="title" value="${esc(k.title)}"></div>
     <div class="fg"><label>발표자 · 소속</label><input type="text" data-kid="${k.id}" data-kf="presenter" value="${esc(k.presenter)}"></div>
     <div class="fg"><label>시간</label><input type="text" data-kid="${k.id}" data-kf="time" value="${esc(k.time)}" placeholder="09:30–10:30"></div>
     <div class="fg"><label>자료 URL (CDN 링크)</label>
@@ -764,37 +794,58 @@ function panelKeynote(){
       ${folderHint()}
     </div>
   </div>`).join('');
-  return`<div class="sub-hd">특강 목록</div>
+  return`<div class="sub-hd">발제 목록</div>
   <p class="help-txt">PDF 파일을 업로드하면 클릭 시 뷰어가 열립니다.<br>저장 폴더 선택 시 source/에 저장되어 HTML 용량이 작아집니다.</p>
-  ${items}<button class="add-btn" onclick="addKeynote()">+ 특강 추가</button>`;
+  ${items}<button class="add-btn" onclick="addKeynote()">+ 발제 추가</button>`;
 }
 
 /* ── Poster ── */
+function awardBtnStyle(current, val){
+  const colors = {최우수:'#c9a227', 우수:'#888', 장려:'#a0522d', '':'#7c6af7'};
+  const active = current === val;
+  const c = colors[val] || colors[''];
+  return active ? `background:${c};color:#fff;border-color:${c}` : '';
+}
 function panelPoster(){
   const items = D.posters.map((p,i)=>`
   <div class="icard">
     <div class="icard-hd"><span class="icard-num">${esc(p.num)}</span>
-      <div class="icard-actions"><button class="ibtn del" onclick="removeItem('posters',${p.id})"><i class="ti ti-trash"></i></button></div>
+      <div class="icard-actions">
+        <button class="ibtn" onclick="moveItem('posters',${p.id},-1)" title="위로"><i class="ti ti-arrow-up"></i></button>
+        <button class="ibtn" onclick="moveItem('posters',${p.id},1)" title="아래로"><i class="ti ti-arrow-down"></i></button>
+        <button class="ibtn del" onclick="removeItem('posters',${p.id})"><i class="ti ti-trash"></i></button>
+      </div>
     </div>
     <div class="row2">
       <div class="fg"><label>번호</label><input type="text" data-pid="${p.id}" data-pf="num" value="${esc(p.num)}" placeholder="P-01"></div>
       <div class="fg"><label>저자 · 소속</label><input type="text" data-pid="${p.id}" data-pf="author" value="${esc(p.author)}"></div>
     </div>
     <div class="fg"><label>논문 제목</label><input type="text" data-pid="${p.id}" data-pf="title" value="${esc(p.title)}"></div>
+    <div class="fg"><label>수상</label>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px">
+        <button class="btn btn-g" style="font-size:.68rem;padding:3px 8px;${awardBtnStyle(p.award,'')}" onclick="setAward(${p.id},'')">없음</button>
+        <button class="btn btn-g" style="font-size:.68rem;padding:3px 8px;${awardBtnStyle(p.award,'최우수')}" onclick="setAward(${p.id},'최우수')">🥇 최우수</button>
+        <button class="btn btn-g" style="font-size:.68rem;padding:3px 8px;${awardBtnStyle(p.award,'우수')}" onclick="setAward(${p.id},'우수')">🥈 우수</button>
+        <button class="btn btn-g" style="font-size:.68rem;padding:3px 8px;${awardBtnStyle(p.award,'장려')}" onclick="setAward(${p.id},'장려')">🥉 장려</button>
+      </div>
+    </div>
     <div class="fg"><label>자료 URL (CDN 링크)</label>
       <input type="url" data-pid="${p.id}" data-pf="fileUrl" value="${esc(p.fileUrl)}" placeholder="https://...">
     </div>
-    <div class="fg"><label>또는 PDF 파일 업로드</label>
-      <div class="file-pick"><input type="file" accept=".pdf" class="pfile" data-pid="${p.id}">
-        <div class="file-pick-lbl">${p.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(p.fileName)}</span>`:'<i class="ti ti-upload"></i> PDF 파일 선택'}</div>
+    <div class="fg"><label>또는 파일 업로드 (PDF / 이미지)</label>
+      <div class="file-pick"><input type="file" accept=".pdf,image/*" class="pfile" data-pid="${p.id}">
+        <div class="file-pick-lbl">${p.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(p.fileName)}</span>`:'<i class="ti ti-upload"></i> PDF 또는 이미지 선택'}</div>
       </div>
       ${p.filePath?`<div style="font-size:.68rem;color:#5dbf78;margin-top:3px"><i class="ti ti-folder"></i> ${esc(p.filePath)}</div>`:''}
       ${(p.fileData||p.fileUrl||p.filePath)?`<button onclick="clearPFile(${p.id})" style="margin-top:3px;font-size:.7rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 파일 제거</button>`:''}
       ${folderHint()}
     </div>
   </div>`).join('');
-  return`<div class="sub-hd">포스터 목록</div>
-  <p class="help-txt">PDF 파일 첨부 시 카드 클릭으로 뷰어가 열립니다.<br>저장 폴더 선택 시 source/에 저장되어 HTML 용량이 작아집니다.</p>
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+    <div class="sub-hd" style="margin-bottom:0">포스터 목록</div>
+    <button class="btn btn-g" style="font-size:.72rem;padding:4px 10px" onclick="sortByAward()"><i class="ti ti-sort-ascending"></i> 수상순 정렬</button>
+  </div>
+  <p class="help-txt">PDF·이미지 첨부 시 카드 클릭으로 뷰어가 열립니다.<br>저장 폴더 선택 시 source/에 저장되어 HTML 용량이 작아집니다.</p>
   ${items}<button class="add-btn" onclick="addPoster()">+ 포스터 추가</button>`;
 }
 
@@ -953,6 +1004,20 @@ function bindListeners(){
    CRUD
 ================================================================ */
 function removeItem(arr,id){ D[arr]=D[arr].filter(x=>x.id!==id); save(); renderPreview(); renderPanel(); }
+function moveItem(arr,id,dir){
+  const i=D[arr].findIndex(x=>x.id===id); if(i<0)return;
+  const j=i+dir; if(j<0||j>=D[arr].length)return;
+  [D[arr][i],D[arr][j]]=[D[arr][j],D[arr][i]];
+  save(); renderPreview(); renderPanel();
+}
+function setAward(id,award){
+  const p=D.posters.find(x=>x.id===id); if(p){p.award=award;save();renderPreview();renderPanel();}
+}
+function sortByAward(){
+  const order={'최우수':0,'우수':1,'장려':2,'':3};
+  D.posters.sort((a,b)=>(order[a.award??'']??3)-(order[b.award??'']??3));
+  save(); renderPreview(); renderPanel();
+}
 function addGreeting(){
   D.greetings.push({id:++uid,body:'',initial:'',name:'',org:'',role:'',photo:null});
   save(); renderPreview(); renderPanel();
@@ -969,7 +1034,7 @@ function clearKFile(id){
 }
 function addPoster(){
   const n='P-'+String(D.posters.length+1).padStart(2,'0');
-  D.posters.push({id:++uid,num:n,title:'',author:'',fileUrl:'',filePath:'',fileData:null,fileName:''});
+  D.posters.push({id:++uid,num:n,title:'',author:'',fileUrl:'',filePath:'',fileData:null,fileName:'',award:''});
   save(); renderPreview(); renderPanel();
 }
 function clearPFile(id){
@@ -1031,10 +1096,19 @@ function exportHTML(){
   const postersHtml = D.posters.map(p=>{
     const fo = getFileObj(p);
     const click = fo ? `onclick="openFile(${JSON.stringify(JSON.stringify(fo)).slice(1,-1).replace(/'/g,"\\'")},'${esc(p.title).replace(/'/g,"\\'")}')"` : '';
-    const hover = fo ? `onmouseenter="this.style.cssText+=';border-color:#185FA5;background:#E6F1FB'" onmouseleave="this.style.cssText+=';border-color:#e0ded6;background:#fff'"` : '';
+    const hover = fo ? `onmouseenter="this.style.borderColor='#185FA5'" onmouseleave="this.style.borderColor=''"` : '';
     const badge = fo ? `<div style="margin-top:6px"><span class="fbadge">&#128279; 보기</span></div>` : '';
-    return`<div class="pcard${fo?' clickable':''}" ${click} ${hover}>
-      <div class="pnum">${esc(p.num)}</div>
+    const awardBorderColor = p.award==='최우수'?'#c9a227':p.award==='우수'?'#9e9e9e':p.award==='장려'?'#cd7f32':'';
+    const awardStyle = awardBorderColor ? `border-color:${awardBorderColor};border-width:2px` : '';
+    const awardBadge = p.award==='최우수'
+      ? `<div><span style="display:inline-flex;align-items:center;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px;background:#fff8dc;color:#8a6800;margin-bottom:6px">🥇 최우수 논문상</span></div>`
+      : p.award==='우수'
+      ? `<div><span style="display:inline-flex;align-items:center;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px;background:#f0f0f0;color:#555;margin-bottom:6px">🥈 우수 논문상</span></div>`
+      : p.award==='장려'
+      ? `<div><span style="display:inline-flex;align-items:center;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px;background:#fdf0e8;color:#8b4513;margin-bottom:6px">🥉 장려상</span></div>`
+      : '';
+    return`<div class="pcard${fo?' clickable':''}" style="${awardStyle}" ${click} ${hover}>
+      ${awardBadge}<div class="pnum">${esc(p.num)}</div>
       <div class="ptitle">${esc(p.title)}</div>
       <div class="pauth">${esc(p.author)}</div>${badge}
     </div>`;
@@ -1149,7 +1223,7 @@ footer a{color:#185FA5;text-decoration:none}
 <body>
 <nav><div class="nav-inner">
   <a href="#greeting" class="active">축사</a>
-  <a href="#keynote">특강</a>
+  <a href="#keynote">발제</a>
   <a href="#poster">포스터 발표</a>
   <a href="#sketch">현장 스케치</a>
 </div></nav>
@@ -1173,7 +1247,7 @@ footer a{color:#185FA5;text-decoration:none}
 <div class="div"></div>
 
 <section id="keynote"><div class="con">
-  <div class="slabel">Keynote</div><div class="stitle">특강</div>
+  <div class="slabel">발제</div><div class="stitle">발제</div>
   ${keynotesHtml}
 </div></section>
 <div class="div"></div>
@@ -1229,22 +1303,22 @@ function openFile(foStr,title){
   const body=document.getElementById('fm-body');
   const dlBtn=document.getElementById('fm-dl');
   body.innerHTML='';dlBtn.style.display='none';
-  let src='',pdf=false,fname='';
+  let src='',pdf=false,img=false,fname='';
   if(fo.type==='path'){
-    /* NAS 호스팅: 상대경로로 직접 로드 */
-    src=fo.path;pdf=/\\.pdf$/i.test(fo.path);fname=fo.name||fo.path.split('/').pop();
+    src=fo.path;pdf=/\\.pdf$/i.test(fo.path);img=/\\.(jpe?g|png|gif|webp|svg|bmp)$/i.test(fo.path);fname=fo.name||fo.path.split('/').pop();
   }else if(fo.type==='url'){
-    src=fo.url;pdf=/\\.pdf$/i.test(fo.url);fname=fo.name||'파일';
+    src=fo.url;pdf=/\\.pdf$/i.test(fo.url);img=/\\.(jpe?g|png|gif|webp|svg|bmp)$/i.test(fo.url);fname=fo.name||'파일';
   }else if(fo.type==='b64'){
-    const mime=fo.data.split(';')[0].split(':')[1];pdf=mime==='application/pdf';
+    const mime=fo.data.split(';')[0].split(':')[1];pdf=mime==='application/pdf';img=/^image\\//i.test(mime);
     const b=atob(fo.data.split(',')[1]),ab=new ArrayBuffer(b.length),ia=new Uint8Array(ab);
     for(let i=0;i<b.length;i++)ia[i]=b.charCodeAt(i);
     src=URL.createObjectURL(new Blob([ab],{type:mime}));fname=fo.name||'파일';
   }
-  /* 다운로드 버튼 */
   dlBtn.href=src;dlBtn.download=fname;dlBtn.style.display='inline-flex';
   if(pdf){
     body.innerHTML='<iframe src="'+src+'#toolbar=0&navpanes=0" style="width:100%;height:70vh;border:none;display:block"></iframe>';
+  }else if(img){
+    body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;padding:1rem;background:#000;min-height:200px;max-height:75vh;overflow:auto"><img src="'+src+'" alt="" style="max-width:100%;max-height:73vh;object-fit:contain;border-radius:6px"></div>';
   }else{
     body.innerHTML='<div class="fmodal-dl"><p style="font-size:.9rem;color:#5f5e5a;text-align:center">이 파일 형식은 브라우저에서 직접 열 수 없습니다.<br>위 <strong>다운로드</strong> 버튼을 눌러 저장 후 여세요.</p></div>';
   }
