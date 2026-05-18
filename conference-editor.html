@@ -248,7 +248,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
   <div class="fmodal" onclick="event.stopPropagation()">
     <div class="fmodal-hd">
       <span class="fmodal-title" id="fmodal-title">자료 보기</span>
-      <button class="fmodal-close" onclick="closeFileModal()"><i class="ti ti-x"></i></button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <a id="fmodal-dl" href="#" download style="display:none;align-items:center;gap:4px;background:#185FA5;color:#fff;padding:5px 12px;border-radius:6px;text-decoration:none;font-size:.78rem;font-weight:600">
+          <i class="ti ti-download"></i>다운로드
+        </a>
+        <button class="fmodal-close" onclick="closeFileModal()"><i class="ti ti-x"></i></button>
+      </div>
     </div>
     <div class="fmodal-body" id="fmodal-body"></div>
   </div>
@@ -287,18 +292,18 @@ const DEFAULT = {
      initial:'이○',name:'이○○',org:'한국게임정책학회',role:'회장',photo:null}
   ],
   keynotes:[
-    {id:1,title:'AI 시대 게임산업 규제 패러다임의 전환',presenter:'홍길동 교수 · 서울대학교 법학전문대학원',time:'09:30–10:30',fileUrl:'',fileData:null,fileName:''},
-    {id:2,title:'글로벌 게임정책 동향과 한국의 과제',presenter:'Jane Smith · Senior Policy Analyst, OECD',time:'10:45–11:45',fileUrl:'',fileData:null,fileName:''}
+    {id:1,title:'AI 시대 게임산업 규제 패러다임의 전환',presenter:'홍길동 교수 · 서울대학교 법학전문대학원',time:'09:30–10:30',fileUrl:'',filePath:'',fileData:null,fileName:''},
+    {id:2,title:'글로벌 게임정책 동향과 한국의 과제',presenter:'Jane Smith · Senior Policy Analyst, OECD',time:'10:45–11:45',fileUrl:'',filePath:'',fileData:null,fileName:''}
   ],
   posters:[
-    {id:1,num:'P-01',title:'게임 과몰입 예방정책의 비교법적 검토',author:'김아름 · 이화여자대학교',fileUrl:'',fileData:null,fileName:''},
-    {id:2,num:'P-02',title:'클라우드 게임 서비스 규제 현황과 개선 방안',author:'박준호 · 부산대학교',fileUrl:'',fileData:null,fileName:''},
-    {id:3,num:'P-03',title:'e스포츠 선수 노동권 보호 법제 연구',author:'신민서 · 중앙대학교',fileUrl:'',fileData:null,fileName:''},
-    {id:4,num:'P-04',title:'게임 크리에이터 경제와 저작권 정책',author:'한동현 · 경희대학교',fileUrl:'',fileData:null,fileName:''},
-    {id:5,num:'P-05',title:'미성년자 게임 이용 시간 제한 정책의 실증 분석',author:'윤소희 · 전남대학교',fileUrl:'',fileData:null,fileName:''},
-    {id:6,num:'P-06',title:'게임 세계관과 광고 규제의 경계',author:'강태현 · 서강대학교',fileUrl:'',fileData:null,fileName:''},
-    {id:7,num:'P-07',title:'장애인 게임 접근성 정책 현황과 개선 방향',author:'임채영 · 한국복지대학교',fileUrl:'',fileData:null,fileName:''},
-    {id:8,num:'P-08',title:'게임 인플루언서 마케팅 규제 이슈 검토',author:'오세진 · 홍익대학교',fileUrl:'',fileData:null,fileName:''}
+    {id:1,num:'P-01',title:'게임 과몰입 예방정책의 비교법적 검토',author:'김아름 · 이화여자대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
+    {id:2,num:'P-02',title:'클라우드 게임 서비스 규제 현황과 개선 방안',author:'박준호 · 부산대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
+    {id:3,num:'P-03',title:'e스포츠 선수 노동권 보호 법제 연구',author:'신민서 · 중앙대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
+    {id:4,num:'P-04',title:'게임 크리에이터 경제와 저작권 정책',author:'한동현 · 경희대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
+    {id:5,num:'P-05',title:'미성년자 게임 이용 시간 제한 정책의 실증 분석',author:'윤소희 · 전남대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
+    {id:6,num:'P-06',title:'게임 세계관과 광고 규제의 경계',author:'강태현 · 서강대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
+    {id:7,num:'P-07',title:'장애인 게임 접근성 정책 현황과 개선 방향',author:'임채영 · 한국복지대학교',fileUrl:'',filePath:'',fileData:null,fileName:''},
+    {id:8,num:'P-08',title:'게임 인플루언서 마케팅 규제 이슈 검토',author:'오세진 · 홍익대학교',fileUrl:'',filePath:'',fileData:null,fileName:''}
   ],
   sketch:{photos:[]}
 };
@@ -404,9 +409,18 @@ async function handleImgUpload(file){
 function isPDF(name,data){
   return (data && data.startsWith('data:application/pdf')) || (name && /\.pdf$/i.test(name));
 }
-function getFileObj(item){
+/* 에디터 미리보기용: base64 우선 (항상 프리뷰 가능) */
+function getFilePreviewObj(item){
   if(item.fileData) return{type:'b64',data:item.fileData,name:item.fileName};
   if(item.fileUrl)  return{type:'url',url:item.fileUrl,name:item.fileUrl.split('/').pop()||'파일'};
+  if(item.filePath) return{type:'path',path:item.filePath,name:item.fileName};
+  return null;
+}
+/* 내보내기용: source/ 경로 우선 → URL → base64(대용량 주의) */
+function getFileObj(item){
+  if(item.filePath) return{type:'path',path:item.filePath,name:item.fileName};
+  if(item.fileUrl)  return{type:'url',url:item.fileUrl,name:item.fileUrl.split('/').pop()||'파일'};
+  if(item.fileData) return{type:'b64',data:item.fileData,name:item.fileName};
   return null;
 }
 function folderHint(){
@@ -475,7 +489,7 @@ function buildPage(){
   }).join('') || '<p style="color:#aaa;font-size:.88rem">축사를 추가하세요.</p>';
 
   const keynotesHtml = D.keynotes.map(k=>{
-    const fo = getFileObj(k);
+    const fo = getFilePreviewObj(k); /* 에디터 미리보기: base64 우선 */
     const cls = fo ? 'p-item clickable' : 'p-item';
     const fattr = fo ? `data-file='${JSON.stringify(fo)}' data-title="${esc(k.title)}"` : '';
     const badge = fo ? `<span class="p-fbadge"><i class="ti ti-file-text"></i>자료 보기</span>` : '';
@@ -486,7 +500,7 @@ function buildPage(){
   }).join('') || '<p style="color:#aaa;font-size:.88rem">특강 항목을 추가하세요.</p>';
 
   const postersHtml = D.posters.map(p=>{
-    const fo = getFileObj(p);
+    const fo = getFilePreviewObj(p); /* 에디터 미리보기: base64 우선 */
     const cls = fo ? 'p-pcard clickable' : 'p-pcard';
     const fattr = fo ? `data-file='${JSON.stringify(fo)}' data-title="${esc(p.title)}"` : '';
     const badge = fo ? `<div style="margin-top:6px"><span class="p-fbadge"><i class="ti ti-external-link"></i>보기</span></div>` : '';
@@ -556,11 +570,22 @@ function openFile(fo, title){
   if(!fo) return;
   document.getElementById('fmodal-title').textContent = title || '자료 보기';
   const body = document.getElementById('fmodal-body');
+  const dlBtn = document.getElementById('fmodal-dl');
   body.innerHTML = '';
+  dlBtn.style.display = 'none';
+
   let src = '', pdf = false, fname = '';
-  if(fo.type === 'url'){
-    src = fo.url; pdf = isPDF(fo.url); fname = fo.name || '파일';
-  }else if(fo.type === 'b64'){
+
+  if(fo.type === 'path'){
+    /* NAS 호스팅 환경: 상대경로로 직접 로드 */
+    src = fo.path;
+    pdf = /\.pdf$/i.test(fo.path);
+    fname = fo.name || fo.path.split('/').pop();
+  } else if(fo.type === 'url'){
+    src = fo.url;
+    pdf = isPDF(fo.url);
+    fname = fo.name || '파일';
+  } else if(fo.type === 'b64'){
     const mime = fo.data.split(';')[0].split(':')[1];
     pdf = mime === 'application/pdf';
     const b = atob(fo.data.split(',')[1]), ab = new ArrayBuffer(b.length), ia = new Uint8Array(ab);
@@ -568,13 +593,21 @@ function openFile(fo, title){
     src = URL.createObjectURL(new Blob([ab],{type:mime}));
     fname = fo.name || '파일';
   }
+
+  /* 다운로드 버튼 항상 표시 */
+  dlBtn.href = src;
+  dlBtn.download = fname;
+  dlBtn.style.display = 'inline-flex';
+
   if(pdf){
-    body.innerHTML = `<iframe src="${src}#toolbar=1" title="${esc(title)}"></iframe>`;
-  }else{
+    body.innerHTML = `<iframe src="${src}#toolbar=0&navpanes=0" title="${esc(title||'')}"></iframe>`;
+  } else {
     body.innerHTML = `<div class="fmodal-dl">
-      <i class="ti ti-file-presentation"></i>
-      <p>이 파일은 브라우저에서 직접 볼 수 없습니다.<br>아래 버튼으로 다운로드하세요.</p>
-      <a href="${src}" download="${esc(fname)}" target="_blank"><i class="ti ti-download"></i>다운로드</a>
+      <i class="ti ti-file-text" style="font-size:3rem;color:#185FA5"></i>
+      <p style="font-size:.88rem;color:#5f5e5a;text-align:center">
+        이 파일 형식은 브라우저에서 직접 열 수 없습니다.<br>
+        위 <strong>다운로드</strong> 버튼을 눌러 저장 후 여세요.
+      </p>
     </div>`;
   }
   document.getElementById('file-overlay').classList.add('open');
@@ -583,6 +616,7 @@ function closeFileModal(e){
   if(e && e.target !== document.getElementById('file-overlay')) return;
   document.getElementById('file-overlay').classList.remove('open');
   document.getElementById('fmodal-body').innerHTML = '';
+  document.getElementById('fmodal-dl').style.display = 'none';
 }
 
 /* ================================================================
@@ -721,15 +755,17 @@ function panelKeynote(){
     <div class="fg"><label>자료 URL (CDN 링크)</label>
       <input type="url" data-kid="${k.id}" data-kf="fileUrl" value="${esc(k.fileUrl)}" placeholder="https://...">
     </div>
-    <div class="fg"><label>또는 파일 업로드 (PDF/PPT)</label>
-      <div class="file-pick"><input type="file" accept=".pdf,.ppt,.pptx" class="kfile" data-kid="${k.id}">
-        <div class="file-pick-lbl">${k.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(k.fileName)}</span>`:'<i class="ti ti-upload"></i> PDF / PPT / PPTX'}</div>
+    <div class="fg"><label>또는 PDF 파일 업로드</label>
+      <div class="file-pick"><input type="file" accept=".pdf" class="kfile" data-kid="${k.id}">
+        <div class="file-pick-lbl">${k.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(k.fileName)}</span>`:'<i class="ti ti-upload"></i> PDF 파일 선택'}</div>
       </div>
-      ${(k.fileData||k.fileUrl)?`<button onclick="clearKFile(${k.id})" style="margin-top:3px;font-size:.7rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 파일 제거</button>`:''}
+      ${k.filePath?`<div style="font-size:.68rem;color:#5dbf78;margin-top:3px"><i class="ti ti-folder"></i> ${esc(k.filePath)}</div>`:''}
+      ${(k.fileData||k.fileUrl||k.filePath)?`<button onclick="clearKFile(${k.id})" style="margin-top:3px;font-size:.7rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 파일 제거</button>`:''}
+      ${folderHint()}
     </div>
   </div>`).join('');
   return`<div class="sub-hd">특강 목록</div>
-  <p class="help-txt">PDF → 클릭 시 미리보기 · PPT → 다운로드<br>CDN URL 또는 파일 업로드 중 하나를 사용하세요.</p>
+  <p class="help-txt">PDF 파일을 업로드하면 클릭 시 뷰어가 열립니다.<br>저장 폴더 선택 시 source/에 저장되어 HTML 용량이 작아집니다.</p>
   ${items}<button class="add-btn" onclick="addKeynote()">+ 특강 추가</button>`;
 }
 
@@ -748,15 +784,17 @@ function panelPoster(){
     <div class="fg"><label>자료 URL (CDN 링크)</label>
       <input type="url" data-pid="${p.id}" data-pf="fileUrl" value="${esc(p.fileUrl)}" placeholder="https://...">
     </div>
-    <div class="fg"><label>또는 파일 업로드</label>
-      <div class="file-pick"><input type="file" accept=".pdf,.ppt,.pptx,image/*" class="pfile" data-pid="${p.id}">
-        <div class="file-pick-lbl">${p.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(p.fileName)}</span>`:'<i class="ti ti-upload"></i> PDF / PPT / 이미지'}</div>
+    <div class="fg"><label>또는 PDF 파일 업로드</label>
+      <div class="file-pick"><input type="file" accept=".pdf" class="pfile" data-pid="${p.id}">
+        <div class="file-pick-lbl">${p.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(p.fileName)}</span>`:'<i class="ti ti-upload"></i> PDF 파일 선택'}</div>
       </div>
-      ${(p.fileData||p.fileUrl)?`<button onclick="clearPFile(${p.id})" style="margin-top:3px;font-size:.7rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 파일 제거</button>`:''}
+      ${p.filePath?`<div style="font-size:.68rem;color:#5dbf78;margin-top:3px"><i class="ti ti-folder"></i> ${esc(p.filePath)}</div>`:''}
+      ${(p.fileData||p.fileUrl||p.filePath)?`<button onclick="clearPFile(${p.id})" style="margin-top:3px;font-size:.7rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 파일 제거</button>`:''}
+      ${folderHint()}
     </div>
   </div>`).join('');
   return`<div class="sub-hd">포스터 목록</div>
-  <p class="help-txt">파일 첨부 시 카드 클릭으로 포스터를 볼 수 있습니다.</p>
+  <p class="help-txt">PDF 파일 첨부 시 카드 클릭으로 뷰어가 열립니다.<br>저장 폴더 선택 시 source/에 저장되어 HTML 용량이 작아집니다.</p>
   ${items}<button class="add-btn" onclick="addPoster()">+ 포스터 추가</button>`;
 }
 
@@ -859,9 +897,10 @@ function bindListeners(){
     el.addEventListener('change',async e=>{
       const f = e.target.files[0]; if(!f) return;
       const kid = +el.dataset.kid;
-      const base64 = await readFile(f);
+      const base64 = await readFile(f);         /* 에디터 미리보기용 */
+      const pathRef = await saveToSource(f);    /* NAS용 source/ 저장 */
       const k = D.keynotes.find(x=>x.id===kid);
-      if(k){ k.fileData=base64; k.fileName=f.name; k.fileUrl=''; save(); renderPreview(); renderPanel(); }
+      if(k){ k.fileData=base64; k.fileName=f.name; k.fileUrl=''; k.filePath=pathRef||''; save(); renderPreview(); renderPanel(); }
     });
   });
 
@@ -878,9 +917,10 @@ function bindListeners(){
     el.addEventListener('change',async e=>{
       const f = e.target.files[0]; if(!f) return;
       const pid = +el.dataset.pid;
-      const base64 = await readFile(f);
+      const base64 = await readFile(f);         /* 에디터 미리보기용 */
+      const pathRef = await saveToSource(f);    /* NAS용 source/ 저장 */
       const p = D.posters.find(x=>x.id===pid);
-      if(p){ p.fileData=base64; p.fileName=f.name; p.fileUrl=''; save(); renderPreview(); renderPanel(); }
+      if(p){ p.fileData=base64; p.fileName=f.name; p.fileUrl=''; p.filePath=pathRef||''; save(); renderPreview(); renderPanel(); }
     });
   });
 
@@ -921,19 +961,19 @@ function clearGPhoto(id){
   const g=D.greetings.find(x=>x.id===id); if(g){g.photo=null;save();renderPreview();renderPanel();}
 }
 function addKeynote(){
-  D.keynotes.push({id:++uid,title:'',presenter:'',time:'',fileUrl:'',fileData:null,fileName:''});
+  D.keynotes.push({id:++uid,title:'',presenter:'',time:'',fileUrl:'',filePath:'',fileData:null,fileName:''});
   save(); renderPreview(); renderPanel();
 }
 function clearKFile(id){
-  const k=D.keynotes.find(x=>x.id===id); if(k){k.fileData=null;k.fileName='';k.fileUrl='';save();renderPreview();renderPanel();}
+  const k=D.keynotes.find(x=>x.id===id); if(k){k.fileData=null;k.fileName='';k.fileUrl='';k.filePath='';save();renderPreview();renderPanel();}
 }
 function addPoster(){
   const n='P-'+String(D.posters.length+1).padStart(2,'0');
-  D.posters.push({id:++uid,num:n,title:'',author:'',fileUrl:'',fileData:null,fileName:''});
+  D.posters.push({id:++uid,num:n,title:'',author:'',fileUrl:'',filePath:'',fileData:null,fileName:''});
   save(); renderPreview(); renderPanel();
 }
 function clearPFile(id){
-  const p=D.posters.find(x=>x.id===id); if(p){p.fileData=null;p.fileName='';p.fileUrl='';save();renderPreview();renderPanel();}
+  const p=D.posters.find(x=>x.id===id); if(p){p.fileData=null;p.fileName='';p.fileUrl='';p.filePath='';save();renderPreview();renderPanel();}
 }
 function removePhoto(i){ D.sketch.photos.splice(i,1); save(); renderPreview(); renderPanel(); }
 function addSketchUrl(){
@@ -1159,7 +1199,10 @@ footer a{color:#185FA5;text-decoration:none}
   <div class="fmodal" onclick="event.stopPropagation()">
     <div class="fmodal-hd">
       <span id="fm-title" style="font-size:.88rem;font-weight:600">자료 보기</span>
-      <button class="fmodal-close" onclick="closeFM()">✕</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <a id="fm-dl" href="#" download style="display:none;align-items:center;gap:4px;background:#185FA5;color:#fff;padding:5px 12px;border-radius:6px;text-decoration:none;font-size:.78rem;font-weight:600">⬇ 다운로드</a>
+        <button class="fmodal-close" onclick="closeFM()">✕</button>
+      </div>
     </div>
     <div class="fmodal-body" id="fm-body"></div>
   </div>
@@ -1183,20 +1226,35 @@ let lbI=0;
 function openFile(foStr,title){
   let fo;try{fo=JSON.parse(foStr);}catch(e){return;}if(!fo)return;
   document.getElementById('fm-title').textContent=title||'자료 보기';
-  const body=document.getElementById('fm-body');body.innerHTML='';
+  const body=document.getElementById('fm-body');
+  const dlBtn=document.getElementById('fm-dl');
+  body.innerHTML='';dlBtn.style.display='none';
   let src='',pdf=false,fname='';
-  if(fo.type==='url'){src=fo.url;pdf=/\\.pdf$/i.test(fo.url);fname=fo.name||'파일';}
-  else if(fo.type==='b64'){
+  if(fo.type==='path'){
+    /* NAS 호스팅: 상대경로로 직접 로드 */
+    src=fo.path;pdf=/\\.pdf$/i.test(fo.path);fname=fo.name||fo.path.split('/').pop();
+  }else if(fo.type==='url'){
+    src=fo.url;pdf=/\\.pdf$/i.test(fo.url);fname=fo.name||'파일';
+  }else if(fo.type==='b64'){
     const mime=fo.data.split(';')[0].split(':')[1];pdf=mime==='application/pdf';
     const b=atob(fo.data.split(',')[1]),ab=new ArrayBuffer(b.length),ia=new Uint8Array(ab);
     for(let i=0;i<b.length;i++)ia[i]=b.charCodeAt(i);
     src=URL.createObjectURL(new Blob([ab],{type:mime}));fname=fo.name||'파일';
   }
-  if(pdf){body.innerHTML='<iframe src="'+src+'#toolbar=1"></iframe>';}
-  else{body.innerHTML='<div class="fmodal-dl"><p style="font-size:.9rem;color:#5f5e5a">이 파일은 브라우저에서 직접 볼 수 없습니다.</p><a href="'+src+'" download="'+fname+'" target="_blank">&#8595; 다운로드</a></div>';}
+  /* 다운로드 버튼 */
+  dlBtn.href=src;dlBtn.download=fname;dlBtn.style.display='inline-flex';
+  if(pdf){
+    body.innerHTML='<iframe src="'+src+'#toolbar=0&navpanes=0" style="width:100%;height:70vh;border:none;display:block"></iframe>';
+  }else{
+    body.innerHTML='<div class="fmodal-dl"><p style="font-size:.9rem;color:#5f5e5a;text-align:center">이 파일 형식은 브라우저에서 직접 열 수 없습니다.<br>위 <strong>다운로드</strong> 버튼을 눌러 저장 후 여세요.</p></div>';
+  }
   document.getElementById('fov').classList.add('open');
 }
-function closeFM(){document.getElementById('fov').classList.remove('open');document.getElementById('fm-body').innerHTML='';}
+function closeFM(){
+  document.getElementById('fov').classList.remove('open');
+  document.getElementById('fm-body').innerHTML='';
+  document.getElementById('fm-dl').style.display='none';
+}
 function openLightbox(i){lbI=i;showLB();document.getElementById('lb').classList.add('open');}
 function showLB(){const ph=PHOTOS[lbI];if(!ph)return;document.getElementById('lb-img').src=ph.src;document.getElementById('lb-cap').textContent=ph.caption||'';document.getElementById('lb-cnt').textContent=(lbI+1)+' / '+PHOTOS.length;}
 function lbNav(d){lbI=(lbI+d+PHOTOS.length)%PHOTOS.length;showLB();}
