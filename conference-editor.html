@@ -1357,6 +1357,12 @@ navLinks.forEach(l=>l.addEventListener('click',e=>{e.preventDefault();const t=do
    INIT
 ================================================================ */
 loadSaved();
+/* uid를 로드된 데이터의 최대 ID보다 크게 설정해 충돌 방지 */
+uid = Math.max(uid,
+  ...D.greetings.map(x=>x.id),
+  ...D.keynotes.map(x=>x.id),
+  ...D.posters.map(x=>x.id)
+);
 renderPreview();
 renderPanel();
 updateFolderUI();
