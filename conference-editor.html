@@ -31,6 +31,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
 .folder-chip i{flex-shrink:0}
 .folder-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
 .folder-chip.ok{color:#5dbf78;border-color:#2e5040;background:#1a2e20}
+.folder-chip.stale{color:#c9922a;border-color:#4a3510;background:#251c08}
 .tb-right{display:flex;gap:6px;flex-shrink:0}
 .btn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:6px;font-size:.78rem;font-family:inherit;cursor:pointer;border:none;transition:all .15s;white-space:nowrap}
 .btn-p{background:var(--ea);color:#fff}.btn-p:hover{background:var(--eah)}
@@ -359,6 +360,7 @@ async function pickFolder(){
   try{
     dirHandle = await window.showDirectoryPicker({mode:'readwrite'});
     await dirHandle.getDirectoryHandle('source',{create:true});
+    localStorage.setItem('conf-ed-last-folder', dirHandle.name);
     updateFolderUI();
   }catch(e){
     if(e.name !== 'AbortError') alert('폴더 선택 오류: ' + e.message);
@@ -367,15 +369,22 @@ async function pickFolder(){
 
 function updateFolderUI(){
   const chip = document.getElementById('folder-chip');
-  const name = document.getElementById('folder-name');
+  const nameEl = document.getElementById('folder-name');
+  chip.classList.remove('ok','stale');
   if(dirHandle){
-    name.textContent = dirHandle.name + '/source';
+    nameEl.textContent = dirHandle.name + '/source';
     chip.classList.add('ok');
     chip.title = '선택된 폴더: ' + dirHandle.name + '/source\n(클릭하여 변경)';
   }else{
-    name.textContent = '저장 폴더 선택';
-    chip.classList.remove('ok');
-    chip.title = '이미지 저장 폴더 선택 (source/ 하위 폴더)';
+    const last = localStorage.getItem('conf-ed-last-folder');
+    if(last){
+      nameEl.textContent = last + '/source ⚠ 재선택 필요';
+      chip.classList.add('stale');
+      chip.title = '이전 폴더: ' + last + '\n새 파일 저장을 위해 클릭하여 다시 선택하세요';
+    }else{
+      nameEl.textContent = '저장 폴더 선택';
+      chip.title = '이미지·PDF 저장 폴더 선택 (source/ 하위 폴더)';
+    }
   }
 }
 
@@ -398,7 +407,18 @@ async function saveToSource(file){
    PERSISTENCE
 ================================================================ */
 function save(){
-  try{ localStorage.setItem('conf-ed-v2', JSON.stringify(D)); }catch(e){}
+  try{
+    /* fileData(base64 PDF/이미지)는 수십 MB라 localStorage 용량 초과 유발 → 제외
+       filePath / fileUrl 은 작은 문자열이므로 저장 유지 */
+    const d = {
+      ...D,
+      keynotes: D.keynotes.map(k=>({...k, fileData:null})),
+      posters:  D.posters.map(p=>({...p, fileData:null}))
+    };
+    localStorage.setItem('conf-ed-v2', JSON.stringify(d));
+  }catch(e){
+    console.warn('자동저장 실패:', e);
+  }
 }
 function loadSaved(){
   try{
@@ -564,7 +584,8 @@ function renderPreview(){
   document.querySelectorAll('#preview .p-photo-item').forEach((el,i)=>{
     el.addEventListener('click',()=>openLightbox(i));
   });
-  renderPDFThumbs(); /* async — fire and forget */
+  /* 레이아웃 계산 후 PDF 렌더링 */
+  requestAnimationFrame(()=>requestAnimationFrame(renderPDFThumbs));
 }
 
 function buildPage(){
@@ -594,10 +615,20 @@ function buildPage(){
     const hasPrev = hasPDF || hasImg;
     let prevEl = '';
     if(hasPDF){
-      prevEl=`<div class="p-item-prev">
-        <canvas data-kid="${k.id}" style="width:100%;display:block"></canvas>
-        <div class="p-thumb-ph"><i class="ti ti-file-text"></i><span>미리보기 로딩 중...</span></div>
-      </div>`;
+      const src = fileSrc(fo);
+      const canRender = src && (src.startsWith('data:') || location.protocol !== 'file:');
+      if(canRender){
+        prevEl=`<div class="p-item-prev">
+          <canvas data-kid="${k.id}" style="width:100%;display:block"></canvas>
+          <div class="p-thumb-ph"><i class="ti ti-file-text"></i><span>미리보기 로딩 중...</span></div>
+        </div>`;
+      } else {
+        prevEl=`<div class="p-item-prev" style="background:#1e1e2e">
+          <div class="p-thumb-ph"><i class="ti ti-file-text" style="color:rgba(255,255,255,.35)"></i>
+          <span style="color:rgba(255,255,255,.5)">PDF 연결됨</span>
+          <span style="font-size:.62rem;color:rgba(255,255,255,.3)">${esc(fo.name||fo.path||'')}</span></div>
+        </div>`;
+      }
     } else if(hasImg){
       prevEl=`<div class="p-item-prev" style="background:#1a1a1a"><img src="${fileSrc(fo)}" alt="${esc(k.title)}"></div>`;
     }
@@ -627,10 +658,20 @@ function buildPage(){
     const awardCls = p.award==='최우수' ? ' award-best' : p.award==='우수' ? ' award-great' : p.award==='장려' ? ' award-encour' : '';
     let prevEl = '';
     if(hasPDF){
-      prevEl=`<div class="p-pcard-prev">
-        <canvas data-pid="${p.id}" style="width:100%;display:block"></canvas>
-        <div class="p-thumb-ph"><i class="ti ti-file-text"></i><span>로딩 중...</span></div>
-      </div>`;
+      const src = fileSrc(fo);
+      const canRender = src && (src.startsWith('data:') || location.protocol !== 'file:');
+      if(canRender){
+        prevEl=`<div class="p-pcard-prev">
+          <canvas data-pid="${p.id}" style="width:100%;display:block"></canvas>
+          <div class="p-thumb-ph"><i class="ti ti-file-text"></i><span>로딩 중...</span></div>
+        </div>`;
+      } else {
+        prevEl=`<div class="p-pcard-prev" style="background:#e8e8e8">
+          <div class="p-thumb-ph" style="color:#aaa"><i class="ti ti-file-text" style="font-size:2.5rem;opacity:.3"></i>
+          <span>PDF 연결됨</span>
+          <span style="font-size:.62rem;opacity:.7">${esc(fo.name||fo.path||'')}</span></div>
+        </div>`;
+      }
     } else if(hasImg){
       prevEl=`<div class="p-pcard-prev"><img src="${fileSrc(fo)}" alt="${esc(p.title)}"></div>`;
     }
@@ -909,9 +950,14 @@ function panelKeynote(){
     </div>
     <div class="fg"><label>또는 PDF 파일 업로드</label>
       <div class="file-pick"><input type="file" accept=".pdf" class="kfile" data-kid="${k.id}">
-        <div class="file-pick-lbl">${k.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(k.fileName)}</span>`:'<i class="ti ti-upload"></i> PDF 파일 선택'}</div>
+        <div class="file-pick-lbl">${k.fileData
+          ? `<span class="ftag"><i class="ti ti-paperclip"></i>${esc(k.fileName)}</span>`
+          : k.filePath
+            ? `<span class="ftag" style="color:#c9922a;background:#251c08"><i class="ti ti-folder"></i>${esc(k.fileName||k.filePath)}</span>`
+            : '<i class="ti ti-upload"></i> PDF 파일 선택'}</div>
       </div>
       ${k.filePath?`<div style="font-size:.68rem;color:#5dbf78;margin-top:3px"><i class="ti ti-folder"></i> ${esc(k.filePath)}</div>`:''}
+      ${k.filePath&&!k.fileData?`<div style="font-size:.67rem;color:#c9922a;margin-top:2px">⚠ 재시작 후 미리보기 비활성 — 파일 재업로드 또는 NAS에서 열면 자동 복원</div>`:''}
       ${(k.fileData||k.fileUrl||k.filePath)?`<button onclick="clearKFile(${k.id})" style="margin-top:3px;font-size:.7rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 파일 제거</button>`:''}
       ${folderHint()}
     </div>
@@ -956,9 +1002,14 @@ function panelPoster(){
     </div>
     <div class="fg"><label>또는 파일 업로드 (PDF / 이미지)</label>
       <div class="file-pick"><input type="file" accept=".pdf,image/*" class="pfile" data-pid="${p.id}">
-        <div class="file-pick-lbl">${p.fileData?`<span class="ftag"><i class="ti ti-paperclip"></i>${esc(p.fileName)}</span>`:'<i class="ti ti-upload"></i> PDF 또는 이미지 선택'}</div>
+        <div class="file-pick-lbl">${p.fileData
+          ? `<span class="ftag"><i class="ti ti-paperclip"></i>${esc(p.fileName)}</span>`
+          : p.filePath
+            ? `<span class="ftag" style="color:#c9922a;background:#251c08"><i class="ti ti-folder"></i>${esc(p.fileName||p.filePath)}</span>`
+            : '<i class="ti ti-upload"></i> PDF 또는 이미지 선택'}</div>
       </div>
       ${p.filePath?`<div style="font-size:.68rem;color:#5dbf78;margin-top:3px"><i class="ti ti-folder"></i> ${esc(p.filePath)}</div>`:''}
+      ${p.filePath&&!p.fileData?`<div style="font-size:.67rem;color:#c9922a;margin-top:2px">⚠ 재시작 후 미리보기 비활성 — 파일 재업로드 또는 NAS에서 열면 자동 복원</div>`:''}
       ${(p.fileData||p.fileUrl||p.filePath)?`<button onclick="clearPFile(${p.id})" style="margin-top:3px;font-size:.7rem;background:none;border:none;color:#e05050;cursor:pointer">✕ 파일 제거</button>`:''}
       ${folderHint()}
     </div>
