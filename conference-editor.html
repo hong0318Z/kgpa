@@ -156,6 +156,19 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--ed);color:var(--et);
 #preview .p-award-badge.best{background:#fff8dc;color:#8a6800}
 #preview .p-award-badge.great{background:#f0f0f0;color:#555}
 #preview .p-award-badge.encour{background:#fdf0e8;color:#8b4513}
+/* PDF / Image preview thumbnails */
+#preview .p-item.has-prev{flex-direction:column;padding:0;gap:0;align-items:stretch}
+#preview .p-item-prev{width:100%;aspect-ratio:16/9;overflow:hidden;background:#111;position:relative;border-radius:var(--rmd) var(--rmd) 0 0}
+#preview .p-item-prev canvas,#preview .p-item-prev img{width:100%;height:100%;object-fit:contain;display:block}
+#preview .p-item-info{padding:.9rem 1.25rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;width:100%}
+#preview .p-pcard.has-prev{padding:0}
+#preview .p-pcard-prev{width:100%;aspect-ratio:3/4;overflow:hidden;background:#e8e8e8;position:relative;border-radius:var(--rmd) var(--rmd) 0 0}
+#preview .p-pcard-prev canvas{width:100%;height:auto;display:block}
+#preview .p-pcard-prev img{width:100%;height:100%;object-fit:contain;display:block}
+#preview .p-pcard-info{padding:.9rem 1.1rem}
+#preview .p-thumb-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none}
+#preview .p-thumb-ph i{font-size:2rem;opacity:.25}
+#preview .p-thumb-ph span{font-size:.7rem;color:#aaa}
 
 /* Sketch */
 #preview .p-sk-ph{text-align:center;padding:3.5rem 2rem;background:var(--cw);border:1px dashed var(--cb);border-radius:var(--rlg);color:var(--cts)}
@@ -420,6 +433,80 @@ function isPDF(name,data){
 function isImageFile(name,data){
   return (data && /^data:image\//i.test(data)) || (name && /\.(jpe?g|png|gif|webp|svg|bmp)$/i.test(name));
 }
+/* file-object type helpers */
+function fileIsPDF(fo){
+  if(!fo) return false;
+  if(fo.type==='b64') return isPDF(fo.name, fo.data);
+  if(fo.type==='url') return isPDF(fo.url, null);
+  if(fo.type==='path') return isPDF(fo.path, null);
+  return false;
+}
+function fileIsImg(fo){
+  if(!fo) return false;
+  if(fo.type==='b64') return isImageFile(fo.name, fo.data);
+  if(fo.type==='url') return isImageFile(fo.url, null);
+  if(fo.type==='path') return isImageFile(fo.path, null);
+  return false;
+}
+function fileSrc(fo){
+  if(!fo) return null;
+  if(fo.type==='b64') return fo.data;
+  if(fo.type==='url') return fo.url;
+  if(fo.type==='path') return fo.path;
+  return null;
+}
+
+/* ================================================================
+   PDF.JS THUMBNAIL RENDERER
+================================================================ */
+let _pdfjsPromise = null;
+function ensurePDFJS(){
+  if(_pdfjsPromise) return _pdfjsPromise;
+  _pdfjsPromise = new Promise(resolve=>{
+    if(window.pdfjsLib){ resolve(true); return; }
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload=()=>{
+      pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      resolve(true);
+    };
+    s.onerror=()=>{ _pdfjsPromise=null; resolve(false); };
+    document.head.appendChild(s);
+  });
+  return _pdfjsPromise;
+}
+async function drawPDFPage(canvas, src){
+  try{
+    if(!await ensurePDFJS()) return;
+    const pdf = await pdfjsLib.getDocument(src).promise;
+    const page = await pdf.getPage(1);
+    const vp0 = page.getViewport({scale:1});
+    const container = canvas.closest('.p-item-prev,.p-pcard-prev');
+    const w = (container ? container.clientWidth : canvas.clientWidth) || 400;
+    const scale = w / vp0.width;
+    const vp = page.getViewport({scale});
+    canvas.width = vp.width; canvas.height = vp.height;
+    await page.render({canvasContext:canvas.getContext('2d'), viewport:vp}).promise;
+    const ph = canvas.parentElement?.querySelector('.p-thumb-ph');
+    if(ph) ph.style.display='none';
+  }catch(e){
+    console.warn('PDF preview:', e);
+    const ph = canvas.parentElement?.querySelector('.p-thumb-ph');
+    if(ph){ ph.innerHTML='<span style="font-size:.72rem;color:#aaa">미리보기 불가</span>'; }
+  }
+}
+async function renderPDFThumbs(){
+  for(const c of document.querySelectorAll('#preview canvas[data-kid]')){
+    const k=D.keynotes.find(x=>x.id===+c.dataset.kid); if(!k) continue;
+    const fo=getFilePreviewObj(k); if(!fileIsPDF(fo)) continue;
+    await drawPDFPage(c, fileSrc(fo));
+  }
+  for(const c of document.querySelectorAll('#preview canvas[data-pid]')){
+    const p=D.posters.find(x=>x.id===+c.dataset.pid); if(!p) continue;
+    const fo=getFilePreviewObj(p); if(!fileIsPDF(fo)) continue;
+    await drawPDFPage(c, fileSrc(fo));
+  }
+}
 /* 에디터 미리보기용: base64 우선 (항상 프리뷰 가능) */
 function getFilePreviewObj(item){
   if(item.fileData) return{type:'b64',data:item.fileData,name:item.fileName};
@@ -477,6 +564,7 @@ function renderPreview(){
   document.querySelectorAll('#preview .p-photo-item').forEach((el,i)=>{
     el.addEventListener('click',()=>openLightbox(i));
   });
+  renderPDFThumbs(); /* async — fire and forget */
 }
 
 function buildPage(){
@@ -500,10 +588,31 @@ function buildPage(){
   }).join('') || '<p style="color:#aaa;font-size:.88rem">축사를 추가하세요.</p>';
 
   const keynotesHtml = D.keynotes.map(k=>{
-    const fo = getFilePreviewObj(k); /* 에디터 미리보기: base64 우선 */
-    const cls = fo ? 'p-item clickable' : 'p-item';
+    const fo = getFilePreviewObj(k);
+    const hasPDF = fileIsPDF(fo);
+    const hasImg = !hasPDF && fileIsImg(fo);
+    const hasPrev = hasPDF || hasImg;
+    let prevEl = '';
+    if(hasPDF){
+      prevEl=`<div class="p-item-prev">
+        <canvas data-kid="${k.id}" style="width:100%;display:block"></canvas>
+        <div class="p-thumb-ph"><i class="ti ti-file-text"></i><span>미리보기 로딩 중...</span></div>
+      </div>`;
+    } else if(hasImg){
+      prevEl=`<div class="p-item-prev" style="background:#1a1a1a"><img src="${fileSrc(fo)}" alt="${esc(k.title)}"></div>`;
+    }
+    const cls = `p-item${fo?' clickable':''}${hasPrev?' has-prev':''}`;
     const fattr = fo ? `data-file='${JSON.stringify(fo)}' data-title="${esc(k.title)}"` : '';
     const badge = fo ? `<span class="p-fbadge"><i class="ti ti-file-text"></i>자료 보기</span>` : '';
+    if(hasPrev){
+      return`<div class="${cls}" ${fattr}>
+        ${prevEl}
+        <div class="p-item-info">
+          <div><div class="p-ititle">${esc(k.title)}</div><div class="p-iauthors">${esc(k.presenter)}</div></div>
+          <div class="p-iright"><div class="p-itime">${esc(k.time)}</div>${badge}</div>
+        </div>
+      </div>`;
+    }
     return`<div class="${cls}" ${fattr}>
       <div><div class="p-ititle">${esc(k.title)}</div><div class="p-iauthors">${esc(k.presenter)}</div></div>
       <div class="p-iright"><div class="p-itime">${esc(k.time)}</div>${badge}</div>
@@ -512,18 +621,31 @@ function buildPage(){
 
   const postersHtml = D.posters.map(p=>{
     const fo = getFilePreviewObj(p);
-    const cls = fo ? 'p-pcard clickable' : 'p-pcard';
+    const hasPDF = fileIsPDF(fo);
+    const hasImg = !hasPDF && fileIsImg(fo);
+    const hasPrev = hasPDF || hasImg;
     const awardCls = p.award==='최우수' ? ' award-best' : p.award==='우수' ? ' award-great' : p.award==='장려' ? ' award-encour' : '';
+    let prevEl = '';
+    if(hasPDF){
+      prevEl=`<div class="p-pcard-prev">
+        <canvas data-pid="${p.id}" style="width:100%;display:block"></canvas>
+        <div class="p-thumb-ph"><i class="ti ti-file-text"></i><span>로딩 중...</span></div>
+      </div>`;
+    } else if(hasImg){
+      prevEl=`<div class="p-pcard-prev"><img src="${fileSrc(fo)}" alt="${esc(p.title)}"></div>`;
+    }
+    const cls = fo ? 'p-pcard clickable' : 'p-pcard';
     const fattr = fo ? `data-file='${JSON.stringify(fo)}' data-title="${esc(p.title)}"` : '';
     const awardBadge = p.award==='최우수' ? `<div><span class="p-award-badge best">🥇 최우수 논문상</span></div>`
       : p.award==='우수' ? `<div><span class="p-award-badge great">🥈 우수 논문상</span></div>`
       : p.award==='장려' ? `<div><span class="p-award-badge encour">🥉 장려상</span></div>`
       : '';
     const badge = fo ? `<div style="margin-top:6px"><span class="p-fbadge"><i class="ti ti-external-link"></i>보기</span></div>` : '';
-    return`<div class="${cls}${awardCls}" ${fattr}>
-      ${awardBadge}<div class="p-pnum">${esc(p.num)}</div>
+    const infoHtml = `${awardBadge}<div class="p-pnum">${esc(p.num)}</div>
       <div class="p-ptitle">${esc(p.title)}</div>
-      <div class="p-pauthor">${esc(p.author)}</div>${badge}
+      <div class="p-pauthor">${esc(p.author)}</div>${badge}`;
+    return`<div class="${cls}${awardCls}${hasPrev?' has-prev':''}" ${fattr}>
+      ${hasPrev ? prevEl+`<div class="p-pcard-info">${infoHtml}</div>` : infoHtml}
     </div>`;
   }).join('') || '<p style="color:#aaa;font-size:.88rem">포스터 항목을 추가하세요.</p>';
 
@@ -1082,11 +1204,38 @@ function exportHTML(){
       </div></div>`;
   }).join('');
 
+  /* helper: src for PDF.js in exported HTML (prefer small path/URL over base64) */
+  function expPrevSrc(item){
+    if(item.filePath) return item.filePath;
+    if(item.fileUrl)  return item.fileUrl;
+    if(item.fileData) return item.fileData;
+    return null;
+  }
+
   const keynotesHtml = D.keynotes.map(k=>{
     const fo = getFileObj(k);
+    const hasPDF = fileIsPDF(fo);
+    const hasImg = !hasPDF && fileIsImg(fo);
+    const hasPrev = hasPDF || hasImg;
+    const prevSrc = hasPrev ? expPrevSrc(k) : null;
+    let prevEl = '';
+    if(hasPDF && prevSrc){
+      prevEl=`<div class="item-prev"><canvas data-pdfsrc="${esc(prevSrc)}" style="width:100%;display:block"></canvas><div class="thumb-ph">미리보기 로딩 중...</div></div>`;
+    } else if(hasImg && prevSrc){
+      prevEl=`<div class="item-prev" style="background:#111"><img src="${esc(prevSrc)}" alt="${esc(k.title)}" style="width:100%;height:100%;object-fit:contain;display:block"></div>`;
+    }
     const click = fo ? `onclick="openFile(${JSON.stringify(JSON.stringify(fo)).slice(1,-1).replace(/'/g,"\\'")},'${esc(k.title).replace(/'/g,"\\'")}')"` : '';
-    const hover = fo ? `onmouseenter="this.style.cssText+=';border-color:#185FA5;background:#E6F1FB'" onmouseleave="this.style.cssText+=';border-color:#e0ded6;background:#fff'"` : '';
     const badge = fo ? `<span class="fbadge">&#128196; 자료 보기</span>` : '';
+    if(hasPrev){
+      return`<div class="item${fo?' clickable':''} has-prev" ${click}>
+        ${prevEl}
+        <div class="item-info">
+          <div><div class="ititle">${esc(k.title)}</div><div class="iauth">${esc(k.presenter)}</div></div>
+          <div class="iright"><span class="itime">${esc(k.time)}</span>${badge}</div>
+        </div>
+      </div>`;
+    }
+    const hover = fo ? `onmouseenter="this.style.cssText+=';border-color:#185FA5;background:#E6F1FB'" onmouseleave="this.style.cssText+=';border-color:#e0ded6;background:#fff'"` : '';
     return`<div class="item${fo?' clickable':''}" ${click} ${hover}>
       <div><div class="ititle">${esc(k.title)}</div><div class="iauth">${esc(k.presenter)}</div></div>
       <div class="iright"><span class="itime">${esc(k.time)}</span>${badge}</div>
@@ -1095,8 +1244,18 @@ function exportHTML(){
 
   const postersHtml = D.posters.map(p=>{
     const fo = getFileObj(p);
+    const hasPDF = fileIsPDF(fo);
+    const hasImg = !hasPDF && fileIsImg(fo);
+    const hasPrev = hasPDF || hasImg;
+    const prevSrc = hasPrev ? expPrevSrc(p) : null;
+    let prevEl = '';
+    if(hasPDF && prevSrc){
+      prevEl=`<div class="pcard-prev"><canvas data-pdfsrc="${esc(prevSrc)}" style="width:100%;display:block"></canvas><div class="thumb-ph">로딩 중...</div></div>`;
+    } else if(hasImg && prevSrc){
+      prevEl=`<div class="pcard-prev"><img src="${esc(prevSrc)}" alt="${esc(p.title)}" style="width:100%;height:100%;object-fit:contain;display:block"></div>`;
+    }
     const click = fo ? `onclick="openFile(${JSON.stringify(JSON.stringify(fo)).slice(1,-1).replace(/'/g,"\\'")},'${esc(p.title).replace(/'/g,"\\'")}')"` : '';
-    const hover = fo ? `onmouseenter="this.style.borderColor='#185FA5'" onmouseleave="this.style.borderColor=''"` : '';
+    const hover = !hasPrev && fo ? `onmouseenter="this.style.borderColor='#185FA5'" onmouseleave="this.style.borderColor=''"` : '';
     const badge = fo ? `<div style="margin-top:6px"><span class="fbadge">&#128279; 보기</span></div>` : '';
     const awardBorderColor = p.award==='최우수'?'#c9a227':p.award==='우수'?'#9e9e9e':p.award==='장려'?'#cd7f32':'';
     const awardStyle = awardBorderColor ? `border-color:${awardBorderColor};border-width:2px` : '';
@@ -1107,10 +1266,9 @@ function exportHTML(){
       : p.award==='장려'
       ? `<div><span style="display:inline-flex;align-items:center;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px;background:#fdf0e8;color:#8b4513;margin-bottom:6px">🥉 장려상</span></div>`
       : '';
-    return`<div class="pcard${fo?' clickable':''}" style="${awardStyle}" ${click} ${hover}>
-      ${awardBadge}<div class="pnum">${esc(p.num)}</div>
-      <div class="ptitle">${esc(p.title)}</div>
-      <div class="pauth">${esc(p.author)}</div>${badge}
+    const infoHtml = `${awardBadge}<div class="pnum">${esc(p.num)}</div><div class="ptitle">${esc(p.title)}</div><div class="pauth">${esc(p.author)}</div>${badge}`;
+    return`<div class="pcard${fo?' clickable':''}${hasPrev?' has-prev':''}" style="${awardStyle}" ${click} ${hover}>
+      ${hasPrev ? prevEl+`<div class="pcard-info">${infoHtml}</div>` : infoHtml}
     </div>`;
   }).join('');
 
@@ -1162,17 +1320,27 @@ nav{background:#fff;border-bottom:1px solid #e0ded6;position:sticky;top:0;z-inde
 .ginfo{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:.5rem}
 .gname{font-size:.92rem;font-weight:700;margin-bottom:4px}
 .gorg{font-size:.78rem;color:#5f5e5a;line-height:1.5}
-.item{background:#fff;border:1px solid #e0ded6;border-radius:8px;padding:1rem 1.25rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;transition:border-color .2s}
+.item{background:#fff;border:1px solid #e0ded6;border-radius:8px;padding:1rem 1.25rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;transition:border-color .2s;overflow:hidden}
 .item:last-child{margin-bottom:0}
 .item.clickable{cursor:pointer}
+.item.has-prev{flex-direction:column;padding:0;gap:0;align-items:stretch}
+.item-prev{width:100%;aspect-ratio:16/9;overflow:hidden;background:#111;position:relative;border-radius:8px 8px 0 0}
+.item-prev canvas,.item-prev img{width:100%;height:100%;object-fit:contain;display:block}
+.item-info{padding:.9rem 1.25rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;width:100%}
 .ititle{font-size:.94rem;font-weight:500;margin-bottom:4px}
 .iauth{font-size:.8rem;color:#5f5e5a}
 .iright{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
 .itime{font-size:.8rem;color:#888780;white-space:nowrap}
 .fbadge{display:inline-flex;align-items:center;gap:3px;font-size:.72rem;font-weight:600;color:#185FA5;background:#E6F1FB;padding:2px 7px;border-radius:4px}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
-.pcard{background:#fff;border:1px solid #e0ded6;border-radius:8px;padding:1rem 1.1rem;transition:all .2s}
+.pcard{background:#fff;border:1px solid #e0ded6;border-radius:8px;padding:1rem 1.1rem;transition:all .2s;overflow:hidden}
 .pcard.clickable{cursor:pointer}
+.pcard.has-prev{padding:0}
+.pcard-prev{width:100%;aspect-ratio:3/4;overflow:hidden;background:#e8e8e8;position:relative;border-radius:8px 8px 0 0}
+.pcard-prev canvas{width:100%;height:auto;display:block}
+.pcard-prev img{width:100%;height:100%;object-fit:contain;display:block}
+.pcard-info{padding:.9rem 1.1rem}
+.thumb-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#aaa;pointer-events:none}
 .pnum{font-size:11px;font-weight:700;color:#3B6D11;margin-bottom:6px;letter-spacing:.05em}
 .ptitle{font-size:.86rem;font-weight:500;line-height:1.5;margin-bottom:8px}
 .pauth{font-size:.78rem;color:#5f5e5a}
@@ -1342,6 +1510,36 @@ const secs=document.querySelectorAll('section[id]');
 const obs=new IntersectionObserver(entries=>{entries.forEach(en=>{if(en.isIntersecting){navLinks.forEach(l=>l.classList.remove('active'));const a=document.querySelector('.nav-inner a[href="#'+en.target.id+'"]');if(a)a.classList.add('active');}});},{rootMargin:'-40% 0px -50% 0px'});
 secs.forEach(s=>obs.observe(s));
 navLinks.forEach(l=>l.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(l.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'});}));
+/* PDF Thumbnails */
+(function(){
+  const canvases=document.querySelectorAll('canvas[data-pdfsrc]');
+  if(!canvases.length) return;
+  async function drawAll(){
+    for(const canvas of canvases){
+      try{
+        const src=canvas.dataset.pdfsrc;
+        const pdf=await pdfjsLib.getDocument(src).promise;
+        const page=await pdf.getPage(1);
+        const vp0=page.getViewport({scale:1});
+        const container=canvas.closest('.item-prev,.pcard-prev');
+        const w=(container?container.clientWidth:canvas.clientWidth)||400;
+        const scale=w/vp0.width;
+        const vp=page.getViewport({scale});
+        canvas.width=vp.width;canvas.height=vp.height;
+        await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+        const ph=canvas.parentElement?.querySelector('.thumb-ph');
+        if(ph)ph.style.display='none';
+      }catch(e){
+        const ph=canvas.parentElement?.querySelector('.thumb-ph');
+        if(ph)ph.textContent='미리보기 불가';
+      }
+    }
+  }
+  const s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+  s.onload=function(){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';drawAll();};
+  document.head.appendChild(s);
+})();
 <\/script>
 </body>
 </html>`;
