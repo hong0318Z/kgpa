@@ -352,6 +352,16 @@ function makeImg(src, exportRef){
 /* ================================================================
    FOLDER MANAGEMENT (File System Access API)
 ================================================================ */
+/* 폴더 미선택 시 업로드 전에 반드시 선택하게 함 */
+async function requireFolder(e){
+  alert('📁 파일을 source/ 폴더에 저장하려면 먼저 저장 폴더를 선택해야 합니다.\n\n폴더 선택 창이 열립니다. 이 HTML 파일이 있는 폴더를 선택하세요.');
+  await pickFolder();
+  if(!dirHandle){
+    /* 사용자가 폴더 선택을 취소한 경우 input 초기화 */
+    if(e && e.target) e.target.value = '';
+  }
+}
+
 async function pickFolder(){
   if(!window.showDirectoryPicker){
     alert('이 기능은 Chrome / Edge 브라우저에서 지원됩니다.\n현재 브라우저에서는 이미지가 base64로 저장됩니다.');
@@ -1121,8 +1131,10 @@ function bindListeners(){
     el.addEventListener('change',async e=>{
       const f = e.target.files[0]; if(!f) return;
       const kid = +el.dataset.kid;
-      const base64 = await readFile(f);         /* 에디터 미리보기용 */
-      const pathRef = await saveToSource(f);    /* NAS용 source/ 저장 */
+      if(!dirHandle) await requireFolder(e);
+      if(!f) return; /* cancelled */
+      const base64 = await readFile(f);
+      const pathRef = await saveToSource(f);
       const k = D.keynotes.find(x=>x.id===kid);
       if(k){ k.fileData=base64; k.fileName=f.name; k.fileUrl=''; k.filePath=pathRef||''; save(); renderPreview(); renderPanel(); }
     });
@@ -1141,8 +1153,10 @@ function bindListeners(){
     el.addEventListener('change',async e=>{
       const f = e.target.files[0]; if(!f) return;
       const pid = +el.dataset.pid;
-      const base64 = await readFile(f);         /* 에디터 미리보기용 */
-      const pathRef = await saveToSource(f);    /* NAS용 source/ 저장 */
+      if(!dirHandle) await requireFolder(e);
+      if(!f) return;
+      const base64 = await readFile(f);
+      const pathRef = await saveToSource(f);
       const p = D.posters.find(x=>x.id===pid);
       if(p){ p.fileData=base64; p.fileName=f.name; p.fileUrl=''; p.filePath=pathRef||''; save(); renderPreview(); renderPanel(); }
     });
@@ -1236,6 +1250,17 @@ function resetData(){
    EXPORT
 ================================================================ */
 function exportHTML(){
+  /* base64 파일이 있으면 경고 */
+  const b64items = [
+    ...D.keynotes.filter(k=>!k.filePath&&!k.fileUrl&&k.fileData).map(k=>`발제: ${k.title||k.fileName}`),
+    ...D.posters.filter(p=>!p.filePath&&!p.fileUrl&&p.fileData).map(p=>`포스터: ${p.title||p.fileName}`)
+  ];
+  if(b64items.length){
+    const ok = confirm(
+      `⚠ 아래 파일이 source/ 경로 없이 HTML에 직접 포함됩니다.\n용량이 50MB 이상으로 커질 수 있습니다.\n\n${b64items.join('\n')}\n\n👉 해결: 툴바의 [저장 폴더 선택]으로 폴더를 지정하고 파일을 다시 업로드하세요.\n\n그래도 내보내시겠습니까?`
+    );
+    if(!ok) return;
+  }
   const b = D.basic;
   const heroRef = imgExportRef(b.heroImage);
   const heroImg = heroRef
@@ -1255,11 +1280,10 @@ function exportHTML(){
       </div></div>`;
   }).join('');
 
-  /* helper: src for PDF.js in exported HTML (prefer small path/URL over base64) */
+  /* canvas 썸네일용 src: path/URL만 허용 — base64는 반환 안 함 (onclick에 이미 있어 중복 방지) */
   function expPrevSrc(item){
     if(item.filePath) return item.filePath;
     if(item.fileUrl)  return item.fileUrl;
-    if(item.fileData) return item.fileData;
     return null;
   }
 
