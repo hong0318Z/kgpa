@@ -398,15 +398,31 @@ function updateFolderUI(){
   }
 }
 
+/* 공백·특수문자 제거 — URL에서 안전하게 */
+function sanitizeFileName(name){
+  const dot = name.lastIndexOf('.');
+  const ext  = dot >= 0 ? name.slice(dot).toLowerCase() : '';
+  const base = dot >= 0 ? name.slice(0, dot) : name;
+  const clean = base
+    .trim()
+    .replace(/\s+/g, '_')                   /* 공백 → _ */
+    .replace(/[^a-zA-Z0-9_\-가-힣]/g, '_') /* 특수문자 → _ */
+    .replace(/_+/g, '_')                    /* 연속 _ → 하나로 */
+    .replace(/^_+|_+$/g, '')               /* 앞뒤 _ 제거 */
+    || 'file';
+  return clean + ext;
+}
+
 async function saveToSource(file){
   if(!dirHandle) return null;
+  const safeName = sanitizeFileName(file.name);
   try{
     const src = await dirHandle.getDirectoryHandle('source',{create:true});
-    const h = await src.getFileHandle(file.name,{create:true});
+    const h = await src.getFileHandle(safeName,{create:true});
     const w = await h.createWritable();
     await w.write(file);
     await w.close();
-    return 'source/' + file.name;
+    return 'source/' + safeName;
   }catch(e){
     console.warn('source/ 저장 실패:', e);
     return null;
@@ -1135,8 +1151,9 @@ function bindListeners(){
       if(!f) return; /* cancelled */
       const base64 = await readFile(f);
       const pathRef = await saveToSource(f);
+      const safeName = sanitizeFileName(f.name);
       const k = D.keynotes.find(x=>x.id===kid);
-      if(k){ k.fileData=base64; k.fileName=f.name; k.fileUrl=''; k.filePath=pathRef||''; save(); renderPreview(); renderPanel(); }
+      if(k){ k.fileData=base64; k.fileName=safeName; k.fileUrl=''; k.filePath=pathRef||''; save(); renderPreview(); renderPanel(); }
     });
   });
 
@@ -1157,8 +1174,9 @@ function bindListeners(){
       if(!f) return;
       const base64 = await readFile(f);
       const pathRef = await saveToSource(f);
+      const safeName = sanitizeFileName(f.name);
       const p = D.posters.find(x=>x.id===pid);
-      if(p){ p.fileData=base64; p.fileName=f.name; p.fileUrl=''; p.filePath=pathRef||''; save(); renderPreview(); renderPanel(); }
+      if(p){ p.fileData=base64; p.fileName=safeName; p.fileUrl=''; p.filePath=pathRef||''; save(); renderPreview(); renderPanel(); }
     });
   });
 
